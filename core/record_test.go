@@ -13,3 +13,10 @@ func TestRecordFaker(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestRecordFakerJSON(t *testing.T) {
+	j := FakeRecordJSON()
+	if j == "" {
+		t.Error("JSON was blank")
+	}
+}

@@ -41,3 +41,12 @@ func FakeRecord() Record {
 	faker.FakeData(&r) //nolint
 	return r
 }
+
+func FakeRecordJSON() string {
+	r := FakeRecord()
+	j, err := json.Marshal(r)
+	if err != nil {
+		return ""
+	}
+	return string(j)
+}
