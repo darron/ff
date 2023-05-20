@@ -34,3 +34,15 @@ func (s HTTPService) CreateRecord(c echo.Context) error {
 	}
 	return c.JSON(http.StatusCreated, id)
 }
+
+func (s HTTPService) CreateStory(c echo.Context) error {
+	ns := &core.NewsStory{}
+	if err := c.Bind(ns); err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	id, err := s.conf.NewsStoryRepository.Store(ns)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	return c.JSON(http.StatusCreated, id)
+}

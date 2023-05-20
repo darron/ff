@@ -37,12 +37,12 @@ func (rr RecordRepository) Find(id string) (*core.Record, error) {
 	return &r, err
 }
 
-func (rr RecordRepository) Store(ns *core.Record) (string, error) {
+func (rr RecordRepository) Store(r *core.Record) (string, error) {
 	redisKey := "record-" + uuid.NewString()
-	ns.ID = redisKey
+	r.ID = redisKey
 	ctx, cancel := context.WithTimeout(context.Background(), redisTimeout)
 	defer cancel()
-	j, err := json.Marshal(ns)
+	j, err := json.Marshal(r)
 	if err != nil {
 		return "", err
 	}
@@ -51,7 +51,7 @@ func (rr RecordRepository) Store(ns *core.Record) (string, error) {
 		return redisKey, err
 	}
 	// Add ID to list of all Records
-	err = rr.client.Do(ctx, rr.client.B().Lpush().Key(allStories).Element(redisKey).Build()).Error()
+	err = rr.client.Do(ctx, rr.client.B().Lpush().Key(allRecords).Element(redisKey).Build()).Error()
 	if err != nil {
 		return redisKey, err
 	}

@@ -2,8 +2,10 @@ package redis
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/darron/ff/core"
+	"github.com/google/uuid"
 	"github.com/redis/rueidis"
 )
 
@@ -31,9 +33,27 @@ func (nsr NewsStoryRepository) Find(id string) (*core.NewsStory, error) {
 		return &ns, err
 	}
 	ns, err = core.UnmarshalJSONNewsStory(response)
-	return &ns, nil
+	return &ns, err
 }
 
 func (nsr NewsStoryRepository) Store(ns *core.NewsStory) (string, error) {
-	return "not-implimented", nil
+	redisKey := "story-" + uuid.NewString()
+	ns.ID = redisKey
+	ctx, cancel := context.WithTimeout(context.Background(), redisTimeout)
+	defer cancel()
+	j, err := json.Marshal(ns)
+	if err != nil {
+		return "", err
+	}
+	err = nsr.client.Do(ctx, nsr.client.B().Set().Key(redisKey).Value(string(j)).Build()).Error()
+	if err != nil {
+		return redisKey, err
+	}
+	// Add ID to list of all Stories for a record.
+	storyList := allStoriesPrefix + "-" + redisKey
+	err = nsr.client.Do(ctx, nsr.client.B().Lpush().Key(storyList).Element(redisKey).Build()).Error()
+	if err != nil {
+		return redisKey, err
+	}
+	return redisKey, err
 }
