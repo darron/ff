@@ -14,8 +14,8 @@
 10. Use some of the new Golang patterns I've been learning.
 
 ### TODO
-- [ ] Add logger to config
-- [ ] Add some debug logging
+- [x] Add logger to config
+- [x] Add some debug logging
 - [ ] Be able to insert Faked data into Repository via CLI
 - [ ] Had to turn off client side caching for miniredis tests - can we ONLY do that for tests?
 - [ ] Redis Implementation of NewsStory

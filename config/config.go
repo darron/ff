@@ -2,15 +2,18 @@ package config
 
 import (
 	"flag"
+	"log"
+	"os"
 
 	"github.com/darron/ff/adaptors/redis"
 	"github.com/darron/ff/core"
+	"golang.org/x/exp/slog"
 )
 
 type OptFunc func(*Opts)
 
 type Opts struct {
-	Debug               bool
+	Logger              *log.Logger
 	NewsStoryRepository core.NewsStoryService
 	Port                string
 	RecordRepository    core.RecordService
@@ -21,16 +24,16 @@ type App struct {
 }
 
 var (
-	defaultDebug   = true
-	defaultPort    = "8080"
-	defaultRedis   = "127.0.0.1:6379"
-	defaultStorage = "redis"
+	defaultLogformat = "text"
+	defaultLogLevel  = "info"
+	defaultPort      = "8080"
+	defaultRedis     = "127.0.0.1:6379"
+	defaultStorage   = "redis"
 )
 
 func defaultOpts() Opts {
 	return Opts{
-		Debug: defaultDebug,
-		Port:  defaultPort,
+		Port: defaultPort,
 	}
 }
 
@@ -41,36 +44,39 @@ func withRedis(conn string) OptFunc {
 	}
 }
 
+func withLogger(l *log.Logger) OptFunc {
+	return func(opts *Opts) {
+		opts.Logger = l
+	}
+}
+
 func setPort(port string) OptFunc {
 	return func(opts *Opts) {
 		opts.Port = port
 	}
 }
 
-func setDebug(debug bool) OptFunc {
-	return func(opts *Opts) {
-		opts.Debug = debug
-	}
-}
-
 func New() (*App, error) {
-	var debug bool
+	var logLevel string
+	var logformat string
 	var optFuncs []OptFunc
 	var port string
 	var redis string
 	var storage string
 
-	flag.BoolVar(&debug, "debug", defaultDebug, "Debug logs")
+	flag.StringVar(&logLevel, "loglevel", defaultLogLevel, "Default Log Level")
+	flag.StringVar(&logformat, "logformat", defaultLogformat, "Log format: json or text")
 	flag.StringVar(&port, "port", defaultPort, "HTTP Port")
 	flag.StringVar(&redis, "redis", defaultRedis, "Redis Connection String")
 	flag.StringVar(&storage, "storage", defaultStorage, "Storage for Data")
 
 	flag.Parse()
 
+	// Let's deal with logging immediately
+	logger := GetLogger(logLevel, logformat)
+	optFuncs = append(optFuncs, withLogger(logger))
+
 	// If we've picked other options - add them to optFuncs
-	if debug != defaultDebug {
-		optFuncs = append(optFuncs, setDebug(debug))
-	}
 	if port != defaultPort {
 		optFuncs = append(optFuncs, setPort(port))
 	}
@@ -90,4 +96,31 @@ func Get(opts ...OptFunc) (*App, error) {
 		Opts: o,
 	}
 	return &app, nil
+}
+
+func GetLogger(level, format string) *log.Logger {
+	var slogLevel slog.Level
+	var slogHandler slog.Handler
+
+	// Let's deal with level.
+	switch level {
+	case "debug":
+		slogLevel = slog.LevelDebug
+	default:
+		slogLevel = slog.LevelInfo
+	}
+	handlerOpts := slog.HandlerOptions{
+		Level: slogLevel,
+	}
+
+	// Let's switch formats as desired.
+	switch format {
+	case "json":
+		slogHandler = slog.NewJSONHandler(os.Stdout, &handlerOpts)
+	default:
+		slogHandler = slog.NewTextHandler(os.Stdout, &handlerOpts)
+	}
+	log := slog.NewLogLogger(slogHandler, slogLevel)
+
+	return log
 }

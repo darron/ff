@@ -12,13 +12,8 @@ type HTTPService struct {
 	conf *config.App
 }
 
-func Start() error {
+func Get(conf *config.App) (*echo.Echo, error) {
 	s := HTTPService{}
-
-	conf, err := config.New()
-	if err != nil {
-		return err
-	}
 
 	s.conf = conf
 
@@ -33,9 +28,7 @@ func Start() error {
 	e.GET("/", root)
 	e.GET("/record/:id", s.GetRecord)
 
-	// Start server
-	e.Logger.Fatal(e.Start(":" + conf.Port))
-	return nil
+	return e, nil
 }
 
 func root(c echo.Context) error {

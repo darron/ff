@@ -8,6 +8,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/redis/rueidis v1.0.4
+	golang.org/x/exp v0.0.0-20230519143937-03e91628a987
 )
 
 require (
