@@ -2,7 +2,6 @@ package config
 
 import (
 	"flag"
-	"log"
 	"os"
 
 	"github.com/darron/ff/adaptors/redis"
@@ -13,7 +12,7 @@ import (
 type OptFunc func(*Opts)
 
 type Opts struct {
-	Logger              *log.Logger
+	Logger              *slog.Logger
 	NewsStoryRepository core.NewsStoryService
 	Port                string
 	RecordRepository    core.RecordService
@@ -44,7 +43,7 @@ func withRedis(conn string) OptFunc {
 	}
 }
 
-func withLogger(l *log.Logger) OptFunc {
+func withLogger(l *slog.Logger) OptFunc {
 	return func(opts *Opts) {
 		opts.Logger = l
 	}
@@ -98,7 +97,7 @@ func Get(opts ...OptFunc) (*App, error) {
 	return &app, nil
 }
 
-func GetLogger(level, format string) *log.Logger {
+func GetLogger(level, format string) *slog.Logger {
 	var slogLevel slog.Level
 	var slogHandler slog.Handler
 
@@ -120,7 +119,7 @@ func GetLogger(level, format string) *log.Logger {
 	default:
 		slogHandler = slog.NewTextHandler(os.Stdout, &handlerOpts)
 	}
-	log := slog.NewLogLogger(slogHandler, slogLevel)
+	log := slog.New(slogHandler)
 
 	return log
 }

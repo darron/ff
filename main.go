@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"log"
+	"os"
 
 	"github.com/darron/ff/cmd/service"
 	"github.com/darron/ff/config"
@@ -24,9 +25,11 @@ func main() {
 	}
 
 	if startHTTPService {
+		conf.Logger.Info("Starting HTTP Service")
 		s, err := service.Get(conf)
 		if err != nil {
-			log.Fatal(err)
+			conf.Logger.Error(err.Error())
+			os.Exit(1)
 		}
 		s.Logger.Fatal(s.Start(":" + conf.Port))
 	}
