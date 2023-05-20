@@ -14,7 +14,10 @@ type RecordRepository struct {
 }
 
 func NewRecordRepository(conn string) core.RecordService {
-	client, err := rueidis.NewClient(rueidis.ClientOption{InitAddress: []string{conn}})
+	client, err := rueidis.NewClient(rueidis.ClientOption{
+		InitAddress:  []string{conn},
+		DisableCache: true,
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -23,9 +26,8 @@ func NewRecordRepository(conn string) core.RecordService {
 
 func (rr RecordRepository) Find(id string) (*core.Record, error) {
 	r := core.Record{}
-	redisKey := "record-" + id
 	ctx := context.Background()
-	response, err := rr.client.Do(ctx, rr.client.B().Get().Key(redisKey).Build()).ToString()
+	response, err := rr.client.Do(ctx, rr.client.B().Get().Key(id).Build()).ToString()
 	if err != nil {
 		return &r, err
 	}
