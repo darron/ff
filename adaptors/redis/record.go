@@ -26,22 +26,35 @@ func NewRecordRepository(conn string) core.RecordService {
 
 func (rr RecordRepository) Find(id string) (*core.Record, error) {
 	r := core.Record{}
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), redisTimeout)
+	defer cancel()
 	response, err := rr.client.Do(ctx, rr.client.B().Get().Key(id).Build()).ToString()
 	if err != nil {
 		return &r, err
 	}
 	r, err = core.UnmarshalJSONRecord(response)
+	// TODO: Get all related NewsStories as well.
 	return &r, err
 }
 
 func (rr RecordRepository) Store(ns *core.Record) (string, error) {
 	redisKey := "record-" + uuid.NewString()
-	ctx := context.Background()
+	ns.ID = redisKey
+	ctx, cancel := context.WithTimeout(context.Background(), redisTimeout)
+	defer cancel()
 	j, err := json.Marshal(ns)
 	if err != nil {
 		return "", err
 	}
 	err = rr.client.Do(ctx, rr.client.B().Set().Key(redisKey).Value(string(j)).Build()).Error()
+	if err != nil {
+		return redisKey, err
+	}
+	// Add ID to list of all Records
+	err = rr.client.Do(ctx, rr.client.B().Lpush().Key(allStories).Element(redisKey).Build()).Error()
+	if err != nil {
+		return redisKey, err
+	}
+	// TODO: Add NewsStories.
 	return redisKey, err
 }
