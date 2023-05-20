@@ -14,18 +14,18 @@
 10. Use some of the new Golang patterns I've been learning.
 
 ### TODO
-[ ] Had to turn off client side caching for miniredis tests - can we ONLY do that for tests?
-[ ] Redis Implementation of NewsStory
-[ ] Link NewsStory to Record
-[ ] Redis: Make sure to add Record to list - so we can grab groups of them.
-[ ] Redis: Make sure to add NewsStory to list - so we can groups of them.
-[ ] Display Record on the Web
-[ ] Import via line of CSV.
-[ ] Postgres Implementation of Record
-[ ] Postgres Implementation of NewsStory
-[ ] Get CRUD working for Record
-[ ] Get CRUD working for NewsStory
-[ ] Integrate News Stories with Web downloading.
-[ ] Integrate News Stories with AI Summaries.
+- [ ] Had to turn off client side caching for miniredis tests - can we ONLY do that for tests?
+- [ ] Redis Implementation of NewsStory
+- [ ] Link NewsStory to Record
+- [ ] Redis: Make sure to add Record to list - so we can grab groups of them.
+- [ ] Redis: Make sure to add NewsStory to list - so we can groups of them.
+- [ ] Display Record on the Web
+- [ ] Import via line of CSV.
+- [ ] Postgres Implementation of Record
+- [ ] Postgres Implementation of NewsStory
+- [ ] Get CRUD working for Record
+- [ ] Get CRUD working for NewsStory
+- [ ] Integrate News Stories with Web downloading.
+- [ ] Integrate News Stories with AI Summaries.
 
 And much, much more.
