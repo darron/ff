@@ -2,15 +2,16 @@
 
 ### GOALS
 
-Show this data in a more complete format: https://bit.ly/canadian-multiple-murders
-Be able to search and show summaries: by province, by City, same tabs as in the spreadsheet
-Show graphs of data across time.
-Grab web page data and store in DB.
-Summaries of web pages by OpenAI.
-Summarize ALL of the news articles for a particular record.
-Store in Postgres.
-Served by Cloudflare.
-Import spreadsheet via CSV.
+1. Show this data in a more complete format: https://bit.ly/canadian-multiple-murders
+2. Be able to search and show summaries: by province, by City, same tabs as in the spreadsheet
+3. Show graphs of data across time.
+4. Grab web page data and store in DB.
+5. Summaries of web pages by OpenAI.
+6. Summarize ALL of the news articles for a particular record.
+7. Store in Postgres.
+8. Served by Cloudflare.
+9. Import spreadsheet via CSV.
+10. Use some of the new Golang patterns I've been learning.
 
 ### TODO
 [ ] Had to turn off client side caching for miniredis tests - can we ONLY do that for tests?
