@@ -7,10 +7,10 @@ import (
 	"github.com/darron/ff/core"
 )
 
-func TestRecordStoreAndFind(t *testing.T) {
+func TestNewsStoryStoreAndFind(t *testing.T) {
 	s := miniredis.RunT(t)
-	rr := NewRecordRepository(s.Addr())
-	r := core.FakeRecord()
+	rr := NewNewsStoryRepository(s.Addr())
+	r := core.FakeNewsStory()
 	r.ID = ""
 	id, err := rr.Store(&r)
 	if err != nil {
@@ -23,7 +23,7 @@ func TestRecordStoreAndFind(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if returnRecord.City != r.City {
+	if returnRecord.BodyText != r.BodyText {
 		t.Error("Those need to match")
 	}
 }
