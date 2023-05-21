@@ -7,10 +7,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func root(c echo.Context) error {
-	return c.JSON(http.StatusOK, "Nothing here")
-}
-
 func (s HTTPService) GetRecord(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {
@@ -26,21 +22,9 @@ func (s HTTPService) GetRecord(c echo.Context) error {
 func (s HTTPService) CreateRecord(c echo.Context) error {
 	r := &core.Record{}
 	if err := c.Bind(r); err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		return c.JSON(http.StatusBadRequest, err)
 	}
 	id, err := s.conf.RecordRepository.Store(r)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
-	}
-	return c.JSON(http.StatusCreated, id)
-}
-
-func (s HTTPService) CreateStory(c echo.Context) error {
-	ns := &core.NewsStory{}
-	if err := c.Bind(ns); err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
-	}
-	id, err := s.conf.NewsStoryRepository.Store(ns)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
