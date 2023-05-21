@@ -9,6 +9,7 @@ require (
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/redis/rueidis v1.0.4
 	github.com/stretchr/testify v1.8.3
+	github.com/tidwall/gjson v1.14.4
 	golang.org/x/exp v0.0.0-20230519143937-03e91628a987
 )
 
@@ -20,6 +21,8 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.18 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/tidwall/match v1.1.1 // indirect
+	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	github.com/yuin/gopher-lua v1.1.0 // indirect

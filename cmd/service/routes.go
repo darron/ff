@@ -18,7 +18,7 @@ func (s HTTPService) GetRecord(c echo.Context) error {
 	}
 	r, err := s.conf.RecordRepository.Find(id)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, "That id does not exist")
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, r)
 }
