@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/darron/ff/cmd/service"
 	"github.com/darron/ff/config"
+	"github.com/darron/ff/service"
 	"github.com/spf13/cobra"
 )
 
