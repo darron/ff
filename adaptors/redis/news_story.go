@@ -50,7 +50,7 @@ func (nsr NewsStoryRepository) Store(ns *core.NewsStory) (string, error) {
 		return redisKey, err
 	}
 	// Add ID to list of all Stories for a record.
-	storyList := allStoriesPrefix + "-" + redisKey
+	storyList := allStoriesPrefix + "-" + ns.RecordID
 	err = nsr.client.Do(ctx, nsr.client.B().Lpush().Key(storyList).Element(redisKey).Build()).Error()
 	if err != nil {
 		return redisKey, err

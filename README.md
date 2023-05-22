@@ -24,7 +24,7 @@
 - [x] Be able to insert Faked data into Repository via CLI
 - [ ] Had to turn off client side caching for miniredis tests - can we ONLY do that for tests? https://github.com/redis/rueidis#disable-client-side-caching
 - [x] Redis Implementation of NewsStory
-- [ ] Link NewsStory to Record
+- [x] Link NewsStory to Record
 - [x] Redis: Make sure to add NewsStory to list - so we can see groups of them.
 - [ ] Display Record on the Web
 - [ ] Import via line of CSV.

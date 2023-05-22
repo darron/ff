@@ -3,7 +3,6 @@ package redis
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/darron/ff/core"
 	"github.com/google/uuid"
@@ -12,6 +11,7 @@ import (
 
 type RecordRepository struct {
 	client rueidis.Client
+	conn   string
 }
 
 func NewRecordRepository(conn string) core.RecordService {
@@ -22,7 +22,7 @@ func NewRecordRepository(conn string) core.RecordService {
 	if err != nil {
 		panic(err)
 	}
-	return RecordRepository{client: client}
+	return RecordRepository{client: client, conn: conn}
 }
 
 func (rr RecordRepository) Find(id string) (*core.Record, error) {
@@ -56,11 +56,16 @@ func (rr RecordRepository) Store(r *core.Record) (string, error) {
 	if err != nil {
 		return redisKey, err
 	}
-	// TODO: Add NewsStories.
+	// Add All NewsStories.
 	if len(r.NewsStories) > 0 {
+		// Get the NewsStoryRepository - don't really like this.
+		nsr := NewNewsStoryRepository(rr.conn)
 		for _, story := range r.NewsStories {
-			// TODO: How to do this in the best and cleanest way possible?
-			fmt.Println(story)
+			story.RecordID = redisKey
+			_, err := nsr.Store(&story)
+			if err != nil {
+				return "", err
+			}
 		}
 	}
 	return redisKey, err
