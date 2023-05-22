@@ -21,7 +21,7 @@
 - [x] Switch to spf13/cobra
 - [x] Split out the CLI.
 - [ ] Convert config to cobra flags - pass that in?
-- [ ] Be able to insert Faked data into Repository via CLI
+- [x] Be able to insert Faked data into Repository via CLI
 - [ ] Had to turn off client side caching for miniredis tests - can we ONLY do that for tests? https://github.com/redis/rueidis#disable-client-side-caching
 - [x] Redis Implementation of NewsStory
 - [ ] Link NewsStory to Record

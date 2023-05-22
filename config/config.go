@@ -2,6 +2,7 @@ package config
 
 import (
 	"flag"
+	"fmt"
 	"os"
 
 	"github.com/darron/ff/adaptors/redis"
@@ -24,7 +25,7 @@ type App struct {
 
 var (
 	defaultLogformat = "text"
-	defaultLogLevel  = "info"
+	defaultLogLevel  = "debug"
 	defaultPort      = "8080"
 	defaultRedis     = "127.0.0.1:6379"
 	defaultStorage   = "redis"
@@ -95,6 +96,12 @@ func Get(opts ...OptFunc) (*App, error) {
 		Opts: o,
 	}
 	return &app, nil
+}
+
+func (a *App) GetHTTPEndpoint() string {
+	// TODO: Will need to update once we move to HTTPS
+	// and a real domain name.
+	return fmt.Sprintf("http://localhost:%s", a.Port)
 }
 
 func GetLogger(level, format string) *slog.Logger {

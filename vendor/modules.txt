@@ -18,6 +18,13 @@ github.com/go-faker/faker/v4/pkg/errors
 github.com/go-faker/faker/v4/pkg/interfaces
 github.com/go-faker/faker/v4/pkg/options
 github.com/go-faker/faker/v4/pkg/slice
+# github.com/gojek/heimdall/v7 v7.0.2
+## explicit; go 1.14
+github.com/gojek/heimdall/v7
+github.com/gojek/heimdall/v7/httpclient
+# github.com/gojek/valkyrie v0.0.0-20180215180059-6aee720afcdf
+## explicit
+github.com/gojek/valkyrie
 # github.com/golang-jwt/jwt v3.2.2+incompatible
 ## explicit
 github.com/golang-jwt/jwt
@@ -43,6 +50,9 @@ github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.18
 ## explicit; go 1.15
 github.com/mattn/go-isatty
+# github.com/pkg/errors v0.9.1
+## explicit
+github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
 ## explicit
 github.com/pmezard/go-difflib/difflib
@@ -57,9 +67,13 @@ github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.5
 ## explicit; go 1.12
 github.com/spf13/pflag
+# github.com/stretchr/objx v0.5.0
+## explicit; go 1.12
+github.com/stretchr/objx
 # github.com/stretchr/testify v1.8.3
 ## explicit; go 1.20
 github.com/stretchr/testify/assert
+github.com/stretchr/testify/mock
 # github.com/tidwall/gjson v1.14.4
 ## explicit; go 1.12
 github.com/tidwall/gjson
