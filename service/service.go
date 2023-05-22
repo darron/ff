@@ -26,7 +26,7 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	e.GET("/", root)
 	e.GET("/records/:id", s.GetRecord)
 	e.POST("/records", s.CreateRecord)
-	e.POST("/stories", s.CreateStory)
+	e.POST("/stories", s.CreateNewsStory)
 
 	return e, nil
 }
