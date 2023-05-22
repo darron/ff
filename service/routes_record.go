@@ -10,11 +10,14 @@ import (
 func (s HTTPService) GetRecord(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {
-		return c.JSON(http.StatusNotFound, "That id does not exist")
+		return c.JSON(http.StatusNotFound, "that id does not exist")
 	}
 	r, err := s.conf.RecordRepository.Find(id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	if r.ID == "" {
+		return c.JSON(http.StatusNotFound, "that id does not exist")
 	}
 	return c.JSON(http.StatusOK, r)
 }
