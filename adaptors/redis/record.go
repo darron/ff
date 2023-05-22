@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	"github.com/darron/ff/core"
 	"github.com/google/uuid"
@@ -56,5 +57,11 @@ func (rr RecordRepository) Store(r *core.Record) (string, error) {
 		return redisKey, err
 	}
 	// TODO: Add NewsStories.
+	if len(r.NewsStories) > 0 {
+		for _, story := range r.NewsStories {
+			// TODO: How to do this in the best and cleanest way possible?
+			fmt.Println(story)
+		}
+	}
 	return redisKey, err
 }
