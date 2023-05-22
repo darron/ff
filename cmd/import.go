@@ -12,7 +12,7 @@ func init() {
 
 var importCmd = &cobra.Command{
 	Use:   "import",
-	Short: "Import CSV of data",
+	Short: "Import CSV with data - exported from Google Sheet",
 	Run: func(cmd *cobra.Command, args []string) {
 		doImport()
 	},
