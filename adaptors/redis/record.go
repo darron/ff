@@ -34,7 +34,19 @@ func (rr RecordRepository) Find(id string) (*core.Record, error) {
 		return &r, err
 	}
 	r, err = core.UnmarshalJSONRecord(response)
-	// TODO: Get all related NewsStories as well.
+	// Get all related NewsStories as well.
+	storiesKey := "stories-" + id
+	storiesSlice, err := rr.client.Do(ctx, rr.client.B().Lrange().Key(storiesKey).Start(0).Stop(-1).Build()).AsStrSlice()
+	stories := []core.NewsStory{}
+	nsr := NewNewsStoryRepository(rr.conn)
+	for _, storyID := range storiesSlice {
+		story, err := nsr.Find(storyID)
+		if err != nil {
+			return &r, err
+		}
+		stories = append(stories, *story)
+	}
+	r.NewsStories = stories
 	return &r, err
 }
 
@@ -43,6 +55,9 @@ func (rr RecordRepository) Store(r *core.Record) (string, error) {
 	r.ID = redisKey
 	ctx, cancel := context.WithTimeout(context.Background(), redisTimeout)
 	defer cancel()
+	// Remove NewsStories to store them separately.
+	newsStories := r.NewsStories
+	r.NewsStories = nil
 	j, err := json.Marshal(r)
 	if err != nil {
 		return "", err
@@ -57,10 +72,10 @@ func (rr RecordRepository) Store(r *core.Record) (string, error) {
 		return redisKey, err
 	}
 	// Add All NewsStories.
-	if len(r.NewsStories) > 0 {
+	if len(newsStories) > 0 {
 		// Get the NewsStoryRepository - don't really like this.
 		nsr := NewNewsStoryRepository(rr.conn)
-		for _, story := range r.NewsStories {
+		for _, story := range newsStories {
 			story.RecordID = redisKey
 			_, err := nsr.Store(&story)
 			if err != nil {
