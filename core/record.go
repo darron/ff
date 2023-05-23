@@ -9,6 +9,7 @@ import (
 type RecordService interface {
 	Find(id string) (*Record, error)
 	Store(r *Record) (string, error)
+	GetAll() ([]*Record, error)
 }
 
 type Record struct {

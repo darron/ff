@@ -33,3 +33,12 @@ func (s HTTPService) CreateRecord(c echo.Context) error {
 	}
 	return c.JSON(http.StatusCreated, id)
 }
+
+func (s HTTPService) GetAllRecords(c echo.Context) error {
+	// Get all records.
+	records, err := s.conf.RecordRepository.GetAll()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	return c.JSON(http.StatusOK, records)
+}

@@ -89,3 +89,25 @@ func (rr RecordRepository) Store(r *core.Record) (string, error) {
 	}
 	return redisKey, err
 }
+
+func (rr RecordRepository) GetAll() ([]*core.Record, error) {
+	var records []*core.Record
+
+	// Grab the list of IDs stored in allRecords
+	ctx, cancel := context.WithTimeout(context.Background(), redisTimeout)
+	defer cancel()
+	allRecordIDs, err := rr.client.Do(ctx, rr.client.B().Lrange().Key(allRecords).Start(0).Stop(-1).Build()).AsStrSlice()
+	if err != nil {
+		return records, err
+	}
+	// Grab all the Records
+	for _, recordID := range allRecordIDs {
+		record, err := rr.Find(recordID)
+		if err != nil {
+			return records, err
+		}
+		records = append(records, record)
+	}
+
+	return records, nil
+}

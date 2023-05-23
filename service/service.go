@@ -25,6 +25,7 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	// Routes
 	e.GET("/", root)
 	e.GET("/records/:id", s.GetRecord)
+	e.GET("/records", s.GetAllRecords)
 	e.POST("/records", s.CreateRecord)
 	e.GET("/stories/:id", s.GetNewsStory)
 	e.POST("/stories", s.CreateNewsStory)

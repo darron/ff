@@ -22,6 +22,15 @@ func (mrr mockRecordRepository) Store(r *core.Record) (string, error) {
 	return r.ID, nil
 }
 
+func (mrr mockRecordRepository) GetAll() ([]*core.Record, error) {
+	var records []*core.Record
+	for i := 1; i < 5; i++ {
+		r := core.FakeRecord()
+		records = append(records, &r)
+	}
+	return records, nil
+}
+
 type mockRecordRepositoryError struct{}
 
 func (mrr mockRecordRepositoryError) Find(id string) (*core.Record, error) {
@@ -35,4 +44,13 @@ func (mrr mockRecordRepositoryError) Store(r *core.Record) (string, error) {
 		r.ID = uuid.NewString()
 	}
 	return r.ID, errors.New("this is an error")
+}
+
+func (mrr mockRecordRepositoryError) GetAll() ([]*core.Record, error) {
+	var records []*core.Record
+	for i := 1; i < 5; i++ {
+		r := core.FakeRecord()
+		records = append(records, &r)
+	}
+	return records, errors.New("this is an error")
 }
