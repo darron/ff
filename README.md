@@ -26,7 +26,7 @@
 - [x] Redis Implementation of NewsStory
 - [x] Link NewsStory to Record
 - [x] Redis: Make sure to add NewsStory to list - so we can see groups of them.
-- [ ] Import via line of CSV.
+- [x] Import via line of CSV.
 - [ ] Display Record on the Web, with stories gotten from related keys.
 - [ ] Postgres Implementation of Record
 - [ ] Postgres Implementation of NewsStory
