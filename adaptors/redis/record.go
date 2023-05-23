@@ -34,10 +34,14 @@ func (rr RecordRepository) Find(id string) (*core.Record, error) {
 		return &r, err
 	}
 	r, err = core.UnmarshalJSONRecord(response)
+	if err != nil {
+		return &r, err
+	}
 	// Get all related NewsStories as well.
-	storiesKey := "stories-" + id
+	storiesKey := allStoriesPrefix + "-" + id
 	storiesSlice, err := rr.client.Do(ctx, rr.client.B().Lrange().Key(storiesKey).Start(0).Stop(-1).Build()).AsStrSlice()
 	stories := []core.NewsStory{}
+	// Get the NewsStoryRepository - don't really like this.
 	nsr := NewNewsStoryRepository(rr.conn)
 	for _, storyID := range storiesSlice {
 		story, err := nsr.Find(storyID)
