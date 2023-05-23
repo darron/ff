@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -125,6 +126,48 @@ func TestCreateRecord500(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 	if assert.NoError(t, s.CreateRecord(c)) {
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+	}
+}
+
+func TestGetRecords200(t *testing.T) {
+	s := HTTPService{}
+	m := mockRecordRepository{}
+	conf, _ := config.Get()
+	s.conf = conf
+	s.conf.RecordRepository = m
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/records", nil)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	if assert.NoError(t, s.GetAllRecords(c)) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+		// Let's make sure there's some data in there.
+		theBody := rec.Body.String()
+		var records []core.Record
+		err := json.Unmarshal([]byte(theBody), &records)
+		if err != nil {
+			t.Error(err)
+		}
+		if len(records) != 4 {
+			t.Error("Not enough entries in there")
+		}
+	}
+}
+
+func TestGetRecords500(t *testing.T) {
+	s := HTTPService{}
+	m := mockRecordRepositoryError{}
+	conf, _ := config.Get()
+	s.conf = conf
+	s.conf.RecordRepository = m
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/records", nil)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	if assert.NoError(t, s.GetAllRecords(c)) {
 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 	}
 }
