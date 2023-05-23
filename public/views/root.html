@@ -1,0 +1,27 @@
+{{define "records"}}<html><head><title>firearms facts</title></head>
+
+<table>
+    <tr>
+        <td>Date</td><td>Name</td><td>City</td><td>Province</td><td>Licensed</td><td>Victims</td><td>Deaths</td><td>Injuries</td><td>Suicide</td><td>Devices Used</td><td>Possessed Legally</td><td>Firearms</td><td>Warnings</td><td>OIC Impact</td>
+    </tr>
+{{range $val := .}}
+<tr>
+<td>{{$val.Date}}</td>
+<td>{{$val.Name}}</td>
+<td>{{$val.City}}</td>
+<td>{{$val.Province}}</td>
+<td>{{$val.Licensed}}</td>
+<td>{{$val.Victims}}</td>
+<td>{{$val.Deaths}}</td>
+<td>{{$val.Injuries}}</td>
+<td>{{$val.Suicide}}</td>
+<td>{{$val.DevicesUsed}}</td>
+<td>{{$val.PossessedLegally}}</td>
+<td>{{$val.Firearms}}</td>
+<td>{{$val.Warnings}}</td>
+<td>{{$val.OICImpact}}</td>
+</tr>
+{{end}}
+</table>
+
+</html>{{end}}

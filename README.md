@@ -26,11 +26,13 @@
 - [x] Link NewsStory to Record
 - [x] Redis: Make sure to add NewsStory to list - so we can see groups of them.
 - [x] Import via line of CSV.
-- [ ] Convert config to cobra flags - pass that in?
-- [ ] Need to deal with nullable booleans - there's lots of data we don't have.
 - [x] Add GetAll() to interface.
 - [x] Create GetAll() service endpoint.
-- [ ] Display GetAll() as simple table - click to display individual records.
+- [x] Display GetAll() as simple table
+- [ ] Move JSON enpoints to `/api/v1`
+- [ ] From / click to display individual records
+- [ ] Convert config to cobra flags - pass that in?
+- [ ] Need to deal with nullable booleans - there's lots of data we don't have.
 - [ ] Display Record on the Web, with stories gotten from related keys.
 - [ ] Postgres Implementation of Record
 - [ ] Postgres Implementation of NewsStory
