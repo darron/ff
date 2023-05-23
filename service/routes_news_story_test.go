@@ -26,7 +26,7 @@ func TestGetNewsStory200(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	c.SetPath("/stories/:id")
+	c.SetPath(NewsStoriesAPIPath + "/:id")
 	c.SetParamNames("id")
 	c.SetParamValues(id)
 	if assert.NoError(t, s.GetNewsStory(c)) {
@@ -53,7 +53,7 @@ func TestGetNewsStory404(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	c.SetPath("/stories/:id")
+	c.SetPath(NewsStoriesAPIPath + "/:id")
 	c.SetParamNames("id")
 	c.SetParamValues("")
 	if assert.NoError(t, s.GetNewsStory(c)) {
@@ -73,7 +73,7 @@ func TestGetNewsStory500(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	c.SetPath("/stories/:id")
+	c.SetPath(NewsStoriesAPIPath + "/:id")
 	c.SetParamNames("id")
 	c.SetParamValues(id)
 	if assert.NoError(t, s.GetNewsStory(c)) {
@@ -89,7 +89,7 @@ func TestCreateNewsStory200(t *testing.T) {
 	s.conf.NewsStoryRepository = m
 	e := echo.New()
 	recordJSON := core.FakeNewsStoryJSON()
-	req := httptest.NewRequest(http.MethodPost, "/stories", strings.NewReader(recordJSON))
+	req := httptest.NewRequest(http.MethodPost, NewsStoriesAPIPath, strings.NewReader(recordJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -105,7 +105,7 @@ func TestCreateNewsStory400(t *testing.T) {
 	s.conf = conf
 	s.conf.NewsStoryRepository = m
 	e := echo.New()
-	req := httptest.NewRequest(http.MethodPost, "/stories", strings.NewReader("not-json"))
+	req := httptest.NewRequest(http.MethodPost, NewsStoriesAPIPath, strings.NewReader("not-json"))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -125,7 +125,7 @@ func TestCreateNewsStory400MissingRecordID(t *testing.T) {
 	// If this is missing - that's an error.
 	ns.RecordID = ""
 	recordJSON, _ := json.Marshal(ns)
-	req := httptest.NewRequest(http.MethodPost, "/stories", strings.NewReader(string(recordJSON)))
+	req := httptest.NewRequest(http.MethodPost, NewsStoriesAPIPath, strings.NewReader(string(recordJSON)))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -142,7 +142,7 @@ func TestCreateNewsStory500(t *testing.T) {
 	s.conf.NewsStoryRepository = m
 	e := echo.New()
 	recordJSON := core.FakeNewsStoryJSON()
-	req := httptest.NewRequest(http.MethodPost, "/stories", strings.NewReader(recordJSON))
+	req := httptest.NewRequest(http.MethodPost, NewsStoriesAPIPath, strings.NewReader(recordJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)

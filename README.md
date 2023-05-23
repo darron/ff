@@ -29,7 +29,7 @@
 - [x] Add GetAll() to interface.
 - [x] Create GetAll() service endpoint.
 - [x] Display GetAll() as simple table
-- [ ] Move JSON enpoints to `/api/v1`
+- [x] Move JSON enpoints to `/api/v1`
 - [ ] From / click to display individual records
 - [ ] Convert config to cobra flags - pass that in?
 - [ ] Need to deal with nullable booleans - there's lots of data we don't have.

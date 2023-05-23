@@ -13,6 +13,7 @@ import (
 
 	"github.com/darron/ff/config"
 	"github.com/darron/ff/core"
+	"github.com/darron/ff/service"
 	"github.com/spf13/cobra"
 )
 
@@ -56,7 +57,7 @@ func doImport(conf *config.App) error {
 	// For each line:
 	// 	Convert each line to core.Record
 	// 	After OIC Impact - each additional non blank entry is a core.NewsStory.
-	// 	Send the core.Record to /records
+	// 	Send the core.Record to service.RecordsAPIPath
 	for _, line := range lines {
 		r := core.Record{
 			Date:             line[0],
@@ -89,7 +90,7 @@ func doImport(conf *config.App) error {
 		// Setup the HTTP client:
 		client := getHTTPClient()
 		// Make up the proper URL including port and path.
-		u, err := url.JoinPath(conf.GetHTTPEndpoint(), "/records")
+		u, err := url.JoinPath(conf.GetHTTPEndpoint(), service.RecordsAPIPath)
 		if err != nil {
 			return err
 		}

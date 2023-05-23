@@ -13,6 +13,12 @@ type HTTPService struct {
 	conf *config.App
 }
 
+var (
+	APIPath            = "/api/v1"
+	NewsStoriesAPIPath = APIPath + "/stories"
+	RecordsAPIPath     = APIPath + "/records"
+)
+
 type Template struct {
 	templates *template.Template
 }
@@ -41,11 +47,11 @@ func Get(conf *config.App) (*echo.Echo, error) {
 
 	// Routes
 	e.GET("/", s.Root)
-	e.GET("/records/:id", s.GetRecord)
-	e.GET("/records", s.GetAllRecords)
-	e.POST("/records", s.CreateRecord)
-	e.GET("/stories/:id", s.GetNewsStory)
-	e.POST("/stories", s.CreateNewsStory)
+	e.GET(RecordsAPIPath+"/:id", s.GetRecord)
+	e.GET(RecordsAPIPath, s.GetAllRecords)
+	e.POST(RecordsAPIPath, s.CreateRecord)
+	e.GET(NewsStoriesAPIPath+"/:id", s.GetNewsStory)
+	e.POST(NewsStoriesAPIPath, s.CreateNewsStory)
 
 	return e, nil
 }

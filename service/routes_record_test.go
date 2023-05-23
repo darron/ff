@@ -26,7 +26,7 @@ func TestGetRecord200(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	c.SetPath("/records/:id")
+	c.SetPath(RecordsAPIPath + "/:id")
 	c.SetParamNames("id")
 	c.SetParamValues(id)
 	if assert.NoError(t, s.GetRecord(c)) {
@@ -53,7 +53,7 @@ func TestGetRecord404(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	c.SetPath("/records/:id")
+	c.SetPath(RecordsAPIPath + "/:id")
 	c.SetParamNames("id")
 	c.SetParamValues("")
 	if assert.NoError(t, s.GetRecord(c)) {
@@ -72,7 +72,7 @@ func TestGetRecord500(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	c.SetPath("/records/:id")
+	c.SetPath(RecordsAPIPath + "/:id")
 	c.SetParamNames("id")
 	c.SetParamValues("does-not-matter")
 	if assert.NoError(t, s.GetRecord(c)) {
@@ -88,7 +88,7 @@ func TestCreateRecord200(t *testing.T) {
 	s.conf.RecordRepository = m
 	e := echo.New()
 	recordJSON := core.FakeRecordJSON()
-	req := httptest.NewRequest(http.MethodPost, "/records", strings.NewReader(recordJSON))
+	req := httptest.NewRequest(http.MethodPost, RecordsAPIPath, strings.NewReader(recordJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -104,7 +104,7 @@ func TestCreateRecord400(t *testing.T) {
 	s.conf = conf
 	s.conf.RecordRepository = m
 	e := echo.New()
-	req := httptest.NewRequest(http.MethodPost, "/records", strings.NewReader("not-json"))
+	req := httptest.NewRequest(http.MethodPost, RecordsAPIPath, strings.NewReader("not-json"))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -121,7 +121,7 @@ func TestCreateRecord500(t *testing.T) {
 	s.conf.RecordRepository = m
 	e := echo.New()
 	recordJSON := core.FakeRecordJSON()
-	req := httptest.NewRequest(http.MethodPost, "/records", strings.NewReader(recordJSON))
+	req := httptest.NewRequest(http.MethodPost, RecordsAPIPath, strings.NewReader(recordJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -137,7 +137,7 @@ func TestGetRecords200(t *testing.T) {
 	s.conf = conf
 	s.conf.RecordRepository = m
 	e := echo.New()
-	req := httptest.NewRequest(http.MethodGet, "/records", nil)
+	req := httptest.NewRequest(http.MethodGet, RecordsAPIPath, nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -163,7 +163,7 @@ func TestGetRecords500(t *testing.T) {
 	s.conf = conf
 	s.conf.RecordRepository = m
 	e := echo.New()
-	req := httptest.NewRequest(http.MethodGet, "/records", nil)
+	req := httptest.NewRequest(http.MethodGet, RecordsAPIPath, nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)

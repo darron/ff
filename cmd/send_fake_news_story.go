@@ -7,6 +7,7 @@ import (
 
 	"github.com/darron/ff/config"
 	"github.com/darron/ff/core"
+	"github.com/darron/ff/service"
 	"github.com/spf13/cobra"
 )
 
@@ -32,7 +33,7 @@ var sendFakeNewsStoryCmd = &cobra.Command{
 func sendFakeNewsStory(conf *config.App) error {
 	client := getHTTPClient()
 	// Make up the proper URL including port and path.
-	u, err := url.JoinPath(conf.GetHTTPEndpoint(), "/stories")
+	u, err := url.JoinPath(conf.GetHTTPEndpoint(), service.NewsStoriesAPIPath)
 	if err != nil {
 		return err
 	}
