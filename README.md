@@ -28,8 +28,8 @@
 - [x] Import via line of CSV.
 - [ ] Convert config to cobra flags - pass that in?
 - [ ] Need to deal with nullable booleans - there's lots of data we don't have.
-- [ ] Add GetAll() to interface.
-- [ ] Create GetAll() service endpoint.
+- [x] Add GetAll() to interface.
+- [x] Create GetAll() service endpoint.
 - [ ] Display GetAll() as simple table - click to display individual records.
 - [ ] Display Record on the Web, with stories gotten from related keys.
 - [ ] Postgres Implementation of Record
