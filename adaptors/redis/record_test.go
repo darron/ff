@@ -33,3 +33,25 @@ func TestRecordStoreAndFind(t *testing.T) {
 		t.Error("Those need to match")
 	}
 }
+
+func TestGetAll(t *testing.T) {
+	s := miniredis.RunT(t)
+	rr := NewRecordRepository(s.Addr())
+	for i := 1; i < 5; i++ {
+		r := core.FakeRecord()
+		id, err := rr.Store(&r)
+		if err != nil {
+			t.Error(err)
+		}
+		if id == "" {
+			t.Error("id cannot be blank")
+		}
+	}
+	records, err := rr.GetAll()
+	if err != nil {
+		t.Error(err)
+	}
+	if len(records) != 4 {
+		t.Error("Not enough records in there")
+	}
+}
