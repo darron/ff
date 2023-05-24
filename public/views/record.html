@@ -1,0 +1,29 @@
+{{define "record"}}<html><head><title>firearms facts: {{.Name}} in {{.Date}}</title></head>
+
+<table>
+    <tr>
+        <td>Date</td><td>Name</td><td>City</td><td>Province</td><td>Licensed</td><td>Victims</td><td>Deaths</td><td>Injuries</td><td>Suicide</td><td>Devices Used</td><td>Possessed Legally</td><td>Firearms</td><td>Warnings</td><td>OIC Impact</td>
+    </tr>
+<tr>
+<td>{{.Date}}</td>
+<td>{{.Name}}</td>
+<td>{{.City}}</td>
+<td>{{.Province}}</td>
+<td>{{.Licensed}}</td>
+<td>{{.Victims}}</td>
+<td>{{.Deaths}}</td>
+<td>{{.Injuries}}</td>
+<td>{{.Suicide}}</td>
+<td>{{.DevicesUsed}}</td>
+<td>{{.PossessedLegally}}</td>
+<td>{{.Firearms}}</td>
+<td>{{.Warnings}}</td>
+<td>{{.OICImpact}}</td>
+</tr>
+</table>
+
+{{range $val := .NewsStories}}
+<div style="margin-bottom: 5px;"><a href="{{$val.URL}}">{{$val.URL}}</a></div>
+{{end}}
+
+</html>{{end}}

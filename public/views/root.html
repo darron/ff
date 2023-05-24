@@ -7,7 +7,7 @@
 {{range $val := .}}
 <tr>
 <td>{{$val.Date}}</td>
-<td>{{$val.Name}}</td>
+<td><a href="/records/{{$val.ID}}">{{$val.Name}}</a></td>
 <td>{{$val.City}}</td>
 <td>{{$val.Province}}</td>
 <td>{{$val.Licensed}}</td>

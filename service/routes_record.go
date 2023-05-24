@@ -7,6 +7,18 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+func (s HTTPService) IndividualRecord(c echo.Context) error {
+	id := c.Param("id")
+	if id == "" {
+		return c.JSON(http.StatusNotFound, "id must not be blank")
+	}
+	r, err := s.conf.RecordRepository.Find(id)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	return c.Render(http.StatusOK, "record", r)
+}
+
 func (s HTTPService) GetRecord(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {

@@ -30,10 +30,10 @@
 - [x] Create GetAll() service endpoint.
 - [x] Display GetAll() as simple table
 - [x] Move JSON enpoints to `/api/v1`
-- [ ] From / click to display individual records
+- [x] From / click to display individual records
 - [ ] Convert config to cobra flags - pass that in?
 - [ ] Need to deal with nullable booleans - there's lots of data we don't have.
-- [ ] Display Record on the Web, with stories gotten from related keys.
+- [x] Display Record on the Web, with stories gotten from related keys.
 - [ ] Postgres Implementation of Record
 - [ ] Postgres Implementation of NewsStory
 - [ ] Get CRUD working for Record

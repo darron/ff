@@ -47,6 +47,7 @@ func Get(conf *config.App) (*echo.Echo, error) {
 
 	// Routes
 	e.GET("/", s.Root)
+	e.GET("/records/:id", s.IndividualRecord)
 	e.GET(RecordsAPIPath+"/:id", s.GetRecord)
 	e.GET(RecordsAPIPath, s.GetAllRecords)
 	e.POST(RecordsAPIPath, s.CreateRecord)
