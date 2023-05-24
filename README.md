@@ -32,7 +32,8 @@
 - [x] Move JSON enpoints to `/api/v1`
 - [x] From / click to display individual records
 - [x] Display Record on the Web, with stories gotten from related keys.
-- [ ] Convert config to cobra flags - pass that in to conf?
+- [x] Remove flags from config - just set default config.
+- [ ] Add flags as neccessary to cmd - then run the required `WithOpt` config func.
 - [ ] Better HTML templates - some sort of CSS framework.
 - [ ] Includes for HTML headers and things?
 - [ ] Need to deal with nullable booleans - there's lots of data we don't have.
