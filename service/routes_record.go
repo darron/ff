@@ -10,7 +10,7 @@ import (
 func (s HTTPService) IndividualRecord(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {
-		return c.JSON(http.StatusNotFound, "id must not be blank")
+		return c.String(http.StatusNotFound, "id must not be blank")
 	}
 	r, err := s.conf.RecordRepository.Find(id)
 	if err != nil {

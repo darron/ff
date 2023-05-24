@@ -31,11 +31,14 @@
 - [x] Display GetAll() as simple table
 - [x] Move JSON enpoints to `/api/v1`
 - [x] From / click to display individual records
-- [ ] Convert config to cobra flags - pass that in?
-- [ ] Need to deal with nullable booleans - there's lots of data we don't have.
 - [x] Display Record on the Web, with stories gotten from related keys.
-- [ ] Postgres Implementation of Record
-- [ ] Postgres Implementation of NewsStory
+- [ ] Convert config to cobra flags - pass that in to conf?
+- [ ] Better HTML templates - some sort of CSS framework.
+- [ ] Includes for HTML headers and things?
+- [ ] Need to deal with nullable booleans - there's lots of data we don't have.
+- [ ] Make it actually be organized.
+- [ ] Postgres/SQLite Implementation of Record
+- [ ] Postgres/SQLite Implementation of NewsStory
 - [ ] Get CRUD working for Record
 - [ ] Get CRUD working for NewsStory
 - [ ] Integrate News Stories with Web downloading.
