@@ -35,7 +35,7 @@
 - [x] Remove flags from config - just set default config.
 - [x] Add flags as neccessary to cmd - then run the required `WithOpt` config func.
 - [x] Allow actual files to be downloaded if there's no route.
-- [ ] Better HTML templates - some sort of CSS framework.
+- [x] Better HTML templates - some sort of CSS framework.
 - [ ] Includes for HTML headers and things?
 - [ ] Need to deal with nullable booleans - there's lots of data we don't have.
 - [ ] Make it actually be organized.
