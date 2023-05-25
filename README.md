@@ -39,6 +39,8 @@
 - [ ] Includes for HTML headers and things?
 - [ ] Need to deal with nullable booleans - there's lots of data we don't have.
 - [ ] Make it actually be organized.
+- [ ] Be able to see different types of Records: firearms only, mass shooting only, OIC firearms only, licensed mass shootings
+- [ ] Integrate StatsCan homicide records.
 - [ ] Postgres/SQLite Implementation of Record
 - [ ] Postgres/SQLite Implementation of NewsStory
 - [ ] Get CRUD working for Record
