@@ -15,16 +15,16 @@
 <td><a href="/records/{{$val.ID}}">{{$val.Name}}</a></td>
 <td>{{$val.City}}</td>
 <td>{{$val.Province}}</td>
-<td>{{$val.Licensed}}</td>
+<td>{{nullbool $val.Licensed}}</td>
 <td>{{$val.Victims}}</td>
 <td>{{$val.Deaths}}</td>
 <td>{{$val.Injuries}}</td>
-<td>{{$val.Suicide}}</td>
+<td>{{nullbool $val.Suicide}}</td>
 <td>{{$val.DevicesUsed}}</td>
-<td>{{$val.PossessedLegally}}</td>
-<td>{{$val.Firearms}}</td>
+<td>{{nullbool $val.PossessedLegally}}</td>
+<td>{{nullbool $val.Firearms}}</td>
 <td>{{$val.Warnings}}</td>
-<td>{{$val.OICImpact}}</td>
+<td>{{nullbool $val.OICImpact}}</td>
 </tr>
 {{end}}
 </table>

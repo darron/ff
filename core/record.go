@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/go-faker/faker/v4"
+	"gopkg.in/guregu/null.v4"
 )
 
 type RecordService interface {
@@ -18,16 +19,16 @@ type Record struct {
 	Name             string      `json:"name,omitempty" faker:"first_name_male"`
 	City             string      `json:"city,omitempty" faker:"oneof: Calgary, Montreal, Vancouver, Toronto"`
 	Province         string      `json:"province,omitempty" faker:"oneof: AB, QC, BC, ON"`
-	Licensed         bool        `json:"licensed,omitempty" faker:"-"`
+	Licensed         null.Bool   `json:"licensed,omitempty" faker:"-"`
 	Victims          int         `json:"victims,omitempty" faker:"boundary_start=2, boundary_end=10"`
 	Deaths           int         `json:"deaths,omitempty" faker:"boundary_start=2, boundary_end=10"`
 	Injuries         int         `json:"injuries,omitempty" faker:"boundary_start=2, boundary_end=10"`
-	Suicide          bool        `json:"suicide,omitempty" faker:"-"`
+	Suicide          null.Bool   `json:"suicide,omitempty" faker:"-"`
 	DevicesUsed      string      `json:"devicesused,omitempty" faker:"oneof: Gun, Knife, Pipe, Hands, Axe"`
-	Firearms         bool        `json:"firearms,omitempty" faker:"-"`
-	PossessedLegally bool        `json:"possessedlegally,omitempty" faker:"-"`
+	Firearms         null.Bool   `json:"firearms,omitempty" faker:"-"`
+	PossessedLegally null.Bool   `json:"possessedlegally,omitempty" faker:"-"`
 	Warnings         string      `json:"warnings,omitempty" faker:"sentence"`
-	OICImpact        bool        `json:"oicimpact,omitempty" faker:"-"`
+	OICImpact        null.Bool   `json:"oicimpact,omitempty" faker:"-"`
 	AISummary        string      `json:"aisummary,omitempty" faker:"paragraph"`
 	NewsStories      []NewsStory `json:"news_stories,omitempty"`
 }

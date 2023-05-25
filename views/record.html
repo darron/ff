@@ -17,16 +17,16 @@
 <td>{{.Name}}</td>
 <td>{{.City}}</td>
 <td>{{.Province}}</td>
-<td>{{.Licensed}}</td>
+<td>{{nullbool .Licensed}}</td>
 <td>{{.Victims}}</td>
 <td>{{.Deaths}}</td>
 <td>{{.Injuries}}</td>
-<td>{{.Suicide}}</td>
+<td>{{nullbool .Suicide}}</td>
 <td>{{.DevicesUsed}}</td>
-<td>{{.PossessedLegally}}</td>
-<td>{{.Firearms}}</td>
+<td>{{nullbool .PossessedLegally}}</td>
+<td>{{nullbool .Firearms}}</td>
 <td>{{.Warnings}}</td>
-<td>{{.OICImpact}}</td>
+<td>{{nullbool .OICImpact}}</td>
 </tr>
 </table>
 

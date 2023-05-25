@@ -1,7 +1,6 @@
 package service
 
 import (
-	"html/template"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -18,9 +17,8 @@ func TestRoot200(t *testing.T) {
 	s.conf = conf
 	s.conf.RecordRepository = m
 	e := echo.New()
-	tp := &Template{
-		templates: template.Must(template.ParseGlob("../views/*.html")),
-	}
+	tp, err := GetTemplates("../views/*.html")
+	assert.NoError(t, err)
 	e.Renderer = tp
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
@@ -38,9 +36,8 @@ func TestRoot500(t *testing.T) {
 	s.conf = conf
 	s.conf.RecordRepository = m
 	e := echo.New()
-	tp := &Template{
-		templates: template.Must(template.ParseGlob("../views/*.html")),
-	}
+	tp, err := GetTemplates("../views/*.html")
+	assert.NoError(t, err)
 	e.Renderer = tp
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
@@ -57,9 +54,8 @@ func TestIndividualRecord200(t *testing.T) {
 	s.conf = conf
 	s.conf.RecordRepository = m
 	e := echo.New()
-	tp := &Template{
-		templates: template.Must(template.ParseGlob("../views/*.html")),
-	}
+	tp, err := GetTemplates("../views/*.html")
+	assert.NoError(t, err)
 	e.Renderer = tp
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
@@ -80,9 +76,8 @@ func TestIndividualRecord404(t *testing.T) {
 	s.conf = conf
 	s.conf.RecordRepository = m
 	e := echo.New()
-	tp := &Template{
-		templates: template.Must(template.ParseGlob("../views/*.html")),
-	}
+	tp, err := GetTemplates("../views/*.html")
+	assert.NoError(t, err)
 	e.Renderer = tp
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
@@ -102,9 +97,8 @@ func TestIndividualRecord500(t *testing.T) {
 	s.conf = conf
 	s.conf.RecordRepository = m
 	e := echo.New()
-	tp := &Template{
-		templates: template.Must(template.ParseGlob("../views/*.html")),
-	}
+	tp, err := GetTemplates("../views/*.html")
+	assert.NoError(t, err)
 	e.Renderer = tp
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()

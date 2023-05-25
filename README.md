@@ -38,7 +38,7 @@
 - [x] Better HTML templates - some sort of CSS framework.
 - [x] Prometheus endpoint for /metrics
 - [x] Includes for HTML headers and things?
-- [ ] Need to deal with nullable booleans - there's lots of data we don't have.
+- [x] Need to deal with nullable booleans - there's lots of data we don't have.
 - [ ] e.Use(middleware.RequestID())
 - [ ] Do I need to add some contexts to track requests?
 - [ ] Add /healthz which tests for health of DB

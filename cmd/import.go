@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/csv"
 	"encoding/json"
 	"log"
@@ -15,6 +16,7 @@ import (
 	"github.com/darron/ff/core"
 	"github.com/darron/ff/service"
 	"github.com/spf13/cobra"
+	"gopkg.in/guregu/null.v4"
 )
 
 func init() {
@@ -120,13 +122,22 @@ func cellToInt(cell string) int {
 	return i
 }
 
-func cellToBool(cell string) bool {
+func cellToBool(cell string) null.Bool {
 	switch cell {
 	case "Yes":
-		return true
+		return null.Bool{NullBool: sql.NullBool{
+			Bool:  true,
+			Valid: true,
+		}}
 	case "No":
-		return false
+		return null.Bool{NullBool: sql.NullBool{
+			Bool:  false,
+			Valid: true,
+		}}
 	default:
-		return false
+		return null.Bool{NullBool: sql.NullBool{
+			Bool:  false,
+			Valid: false,
+		}}
 	}
 }

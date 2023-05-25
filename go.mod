@@ -14,6 +14,7 @@ require (
 	github.com/stretchr/testify v1.8.3
 	github.com/tidwall/gjson v1.14.4
 	golang.org/x/exp v0.0.0-20230519143937-03e91628a987
+	gopkg.in/guregu/null.v4 v4.0.0
 )
 
 require (
