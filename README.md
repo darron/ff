@@ -36,11 +36,13 @@
 - [x] Add flags as neccessary to cmd - then run the required `WithOpt` config func.
 - [x] Allow actual files to be downloaded if there's no route.
 - [x] Better HTML templates - some sort of CSS framework.
+- [x] Prometheus endpoint for /metrics
 - [ ] Includes for HTML headers and things?
 - [ ] Need to deal with nullable booleans - there's lots of data we don't have.
 - [ ] Make it actually be organized.
 - [ ] Be able to see different types of Records: firearms only, mass shooting only, OIC firearms only, licensed mass shootings
 - [ ] Integrate StatsCan homicide records.
+- [ ] ACLs for /api/ endpoints
 - [ ] Postgres/SQLite Implementation of Record
 - [ ] Postgres/SQLite Implementation of NewsStory
 - [ ] Get CRUD working for Record

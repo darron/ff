@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"github.com/darron/ff/config"
+	"github.com/labstack/echo-contrib/prometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -34,6 +35,10 @@ func Get(conf *config.App) (*echo.Echo, error) {
 
 	// Echo instance
 	e := echo.New()
+
+	// Enable Prometheus
+	p := prometheus.NewPrometheus("echo", nil)
+	p.Use(e)
 
 	// Let's allow some static files
 	e.Static("/", "public")
