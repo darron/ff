@@ -1,12 +1,7 @@
 {{define "record"}}<html>
     <head>
         <title>firearms facts: {{.Name}} in {{.City}} in {{.Date}}</title>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Foundation for Sites</title>
-        <link rel="stylesheet" href="/css/foundation.css">
-        <link rel="stylesheet" href="/css/app.css">
+        {{template "meta"}}
     </head>
 
     <h1>🇨🇦 Firearms Facts</h1>
@@ -38,5 +33,5 @@
 {{range $val := .NewsStories}}
 <div style="margin-bottom: 5px;"><a href="{{$val.URL}}">{{$val.URL}}</a></div>
 {{end}}
-
+{{template "footer"}}
 </html>{{end}}
