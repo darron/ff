@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/echo-contrib/prometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"gopkg.in/guregu/null.v4"
 )
 
 type HTTPService struct {
@@ -43,6 +44,10 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	// Let's allow some static files
 	e.Static("/", "public")
 
+	funcMap := template.FuncMap{
+		"nullBool": nullBool,
+	}
+
 	// For when we want to use templates.
 	t := &Template{
 		templates: template.Must(template.ParseGlob("views/*.html")),
@@ -63,4 +68,13 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	e.POST(NewsStoriesAPIPath, s.CreateNewsStory)
 
 	return e, nil
+}
+
+func nullBool(n null.Bool) string {
+	if n.Valid && n.Bool {
+		return "Yes"
+	} else if n.Valid && !n.Bool {
+		return "No"
+	}
+	return ""
 }
