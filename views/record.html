@@ -1,6 +1,6 @@
 {{define "record"}}<html>
     <head>
-        <title>firearms facts: {{.Name}} in {{.Date}}</title>
+        <title>firearms facts: {{.Name}} in {{.City}} in {{.Date}}</title>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,10 @@
         <link rel="stylesheet" href="/css/foundation.css">
         <link rel="stylesheet" href="/css/app.css">
     </head>
+
+    <h1>🇨🇦 Firearms Facts</h1>
+
+    <h2>{{.Name}} in {{.City}} in {{.Date}}</h2>
 
 <table>
     <tr>

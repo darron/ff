@@ -37,6 +37,7 @@
 - [x] Allow actual files to be downloaded if there's no route.
 - [x] Better HTML templates - some sort of CSS framework.
 - [x] Prometheus endpoint for /metrics
+- [ ] Add /healthz which tests for health of DB
 - [ ] Includes for HTML headers and things?
 - [ ] Need to deal with nullable booleans - there's lots of data we don't have.
 - [ ] Make it actually be organized.
