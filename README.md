@@ -38,10 +38,15 @@
 - [x] Better HTML templates - some sort of CSS framework.
 - [x] Prometheus endpoint for /metrics
 - [x] Includes for HTML headers and things?
-- [ ] Add /healthz which tests for health of DB
 - [ ] Need to deal with nullable booleans - there's lots of data we don't have.
+- [ ] e.Use(middleware.RequestID())
+- [ ] Do I need to add some contexts to track requests?
+- [ ] Add /healthz which tests for health of DB
 - [ ] Make it actually be organized.
 - [ ] Be able to see different types of Records: firearms only, mass shooting only, OIC firearms only, licensed mass shootings
+- [ ] Deploy to domain name
+- [ ] Add autoTLS - https://echo.labstack.com/cookbook/auto-tls/
+- [ ] Put Behind Cloudflare?
 - [ ] Integrate StatsCan homicide records.
 - [ ] ACLs for /api/ endpoints
 - [ ] Postgres/SQLite Implementation of Record
