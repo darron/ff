@@ -19,7 +19,7 @@ var sendFakeRecordCmd = &cobra.Command{
 	Use:   "record",
 	Short: "Send fake core.Record to HTTP endpoint",
 	Run: func(cmd *cobra.Command, args []string) {
-		conf, err := config.New()
+		conf, err := config.Get(config.WithPort(port), config.WithLogger(logLevel, logFormat))
 		if err != nil {
 			log.Fatal(err)
 		}
