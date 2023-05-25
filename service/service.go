@@ -35,6 +35,9 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	// Echo instance
 	e := echo.New()
 
+	// Let's allow some static files
+	e.Static("/", "public")
+
 	// For when we want to use templates.
 	t := &Template{
 		templates: template.Must(template.ParseGlob("views/*.html")),

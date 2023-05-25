@@ -34,7 +34,7 @@
 - [x] Display Record on the Web, with stories gotten from related keys.
 - [x] Remove flags from config - just set default config.
 - [x] Add flags as neccessary to cmd - then run the required `WithOpt` config func.
-- [ ] Allow actual files to be downloaded if there's no route.
+- [x] Allow actual files to be downloaded if there's no route.
 - [ ] Better HTML templates - some sort of CSS framework.
 - [ ] Includes for HTML headers and things?
 - [ ] Need to deal with nullable booleans - there's lots of data we don't have.
