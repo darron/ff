@@ -44,13 +44,10 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	// Let's allow some static files
 	e.Static("/", "public")
 
-	funcMap := template.FuncMap{
-		"nullBool": nullBool,
-	}
-
-	// For when we want to use templates.
-	t := &Template{
-		templates: template.Must(template.ParseGlob("views/*.html")),
+	// Let's setup the templates.
+	t, err := GetTemplates("views/*.html")
+	if err != nil {
+		return nil, err
 	}
 	e.Renderer = t
 
@@ -70,11 +67,27 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	return e, nil
 }
 
-func nullBool(n null.Bool) string {
+func nullbool(n null.Bool) string {
 	if n.Valid && n.Bool {
 		return "Yes"
 	} else if n.Valid && !n.Bool {
 		return "No"
 	}
 	return ""
+}
+
+func GetTemplates(p string) (*Template, error) {
+	// Let's setup templates with custom funcs.
+	t := &Template{
+		templates: template.New(""),
+	}
+	funcMap := template.FuncMap{
+		"nullbool": nullbool,
+	}
+	t.templates = t.templates.Funcs(funcMap)
+	_, err := t.templates.ParseGlob(p)
+	if err != nil {
+		return nil, err
+	}
+	return t, nil
 }
