@@ -4,13 +4,13 @@
         {{template "meta"}}
     </head>
 
-    <h1>🇨🇦 Firearms Facts</h1>
+    <h1><a href="/">🇨🇦 Firearms Facts</a></h1>
 
     <h2>{{.Name}} in {{.City}} in {{.Date}}</h2>
 
 <table>
     <tr>
-        <td>Date</td><td>Name</td><td>City</td><td>Province</td><td>Licensed</td><td>Victims</td><td>Deaths</td><td>Injuries</td><td>Suicide</td><td>Devices Used</td><td>Possessed Legally</td><td>Firearms</td><td>Warnings</td><td>OIC Impact</td>
+        <td>Date</td><td>Name</td><td>City</td><td>Province</td><td>Licensed</td><td>Victims</td><td>Deaths</td><td>Injuries</td><td>Suicide</td><td>Possessed Legally</td><td>Firearms</td><td>OIC Impact</td>
     </tr>
 <tr>
 <td>{{.Date}}</td>
@@ -22,14 +22,19 @@
 <td>{{.Deaths}}</td>
 <td>{{.Injuries}}</td>
 <td>{{nullbool .Suicide}}</td>
-<td>{{.DevicesUsed}}</td>
 <td>{{nullbool .PossessedLegally}}</td>
 <td>{{nullbool .Firearms}}</td>
-<td>{{.Warnings}}</td>
 <td>{{nullbool .OICImpact}}</td>
 </tr>
 </table>
 
+<h3>Used</h3>
+<p>{{.DevicesUsed}}</p>
+
+<h3>Warnings</h3>
+<p>{{.Warnings}}</p>
+
+<h3>News Stories</h3>
 {{range $val := .NewsStories}}
 <div style="margin-bottom: 5px;"><a href="{{$val.URL}}">{{$val.URL}}</a></div>
 {{end}}

@@ -7,7 +7,7 @@
 
 <table>
     <tr>
-        <td>Date</td><td>Name</td><td>City</td><td>Province</td><td>Licensed</td><td>Victims</td><td>Deaths</td><td>Injuries</td><td>Suicide</td><td>Devices Used</td><td>Possessed Legally</td><td>Firearms</td><td>Warnings</td><td>OIC Impact</td>
+        <td>Date</td><td>Name</td><td>City</td><td>Province</td><td>Licensed</td><td>Victims</td><td>Deaths</td><td>Injuries</td><td>Suicide</td><td>Possessed Legally</td><td>Firearms</td><td>OIC Impact</td>
     </tr>
 {{range $val := .}}
 <tr>
@@ -20,10 +20,8 @@
 <td>{{$val.Deaths}}</td>
 <td>{{$val.Injuries}}</td>
 <td>{{nullbool $val.Suicide}}</td>
-<td>{{$val.DevicesUsed}}</td>
 <td>{{nullbool $val.PossessedLegally}}</td>
 <td>{{nullbool $val.Firearms}}</td>
-<td>{{$val.Warnings}}</td>
 <td>{{nullbool $val.OICImpact}}</td>
 </tr>
 {{end}}
