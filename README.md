@@ -37,8 +37,8 @@
 - [x] Allow actual files to be downloaded if there's no route.
 - [x] Better HTML templates - some sort of CSS framework.
 - [x] Prometheus endpoint for /metrics
+- [x] Includes for HTML headers and things?
 - [ ] Add /healthz which tests for health of DB
-- [ ] Includes for HTML headers and things?
 - [ ] Need to deal with nullable booleans - there's lots of data we don't have.
 - [ ] Make it actually be organized.
 - [ ] Be able to see different types of Records: firearms only, mass shooting only, OIC firearms only, licensed mass shootings
