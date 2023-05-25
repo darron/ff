@@ -37,7 +37,7 @@ func Get(conf *config.App) (*echo.Echo, error) {
 
 	// For when we want to use templates.
 	t := &Template{
-		templates: template.Must(template.ParseGlob("public/views/*.html")),
+		templates: template.Must(template.ParseGlob("views/*.html")),
 	}
 	e.Renderer = t
 
