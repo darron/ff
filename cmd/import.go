@@ -29,7 +29,10 @@ var (
 		Use:   "import",
 		Short: "Import CSV with data - exported from Google Sheet",
 		Run: func(cmd *cobra.Command, args []string) {
-			conf, err := config.New()
+			conf, err := config.Get(
+				config.WithPort(port),
+				config.WithLogger(logLevel, logFormat),
+				config.WithJWTToken(jwtToken))
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -100,7 +103,7 @@ func doImport(conf *config.App) error {
 		if err != nil {
 			return err
 		}
-		req := getHTTPRequest(http.MethodPost, u, string(jsonRecord))
+		req := getHTTPRequest(http.MethodPost, u, string(jsonRecord), conf.JWTToken)
 		// Send the HTTP request.
 		res, err := client.Do(req)
 		if err != nil {

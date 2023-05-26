@@ -11,16 +11,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	sendCmd = &cobra.Command{
+		Use:   "send",
+		Short: "Send data to HTTP Endpoints",
+		Run: func(cmd *cobra.Command, args []string) {
+			doSend()
+		},
+	}
+)
+
 func init() {
 	rootCmd.AddCommand(sendCmd)
-}
-
-var sendCmd = &cobra.Command{
-	Use:   "send",
-	Short: "Send data to HTTP Endpoints",
-	Run: func(cmd *cobra.Command, args []string) {
-		doSend()
-	},
 }
 
 func doSend() {
@@ -48,7 +50,7 @@ func getHTTPClient() *httpclient.Client {
 	return client
 }
 
-func getHTTPRequest(method, url, body string) *http.Request {
+func getHTTPRequest(method, url, body, token string) *http.Request {
 	var req *http.Request
 	if body != "" {
 		req, _ = http.NewRequest(method, url, strings.NewReader(body))
@@ -56,5 +58,8 @@ func getHTTPRequest(method, url, body string) *http.Request {
 		req, _ = http.NewRequest(method, url, nil)
 	}
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	if token != "" {
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+	}
 	return req
 }

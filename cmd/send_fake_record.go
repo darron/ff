@@ -19,7 +19,10 @@ var sendFakeRecordCmd = &cobra.Command{
 	Use:   "record",
 	Short: "Send fake core.Record to HTTP endpoint",
 	Run: func(cmd *cobra.Command, args []string) {
-		conf, err := config.Get(config.WithPort(port), config.WithLogger(logLevel, logFormat))
+		conf, err := config.Get(
+			config.WithPort(port),
+			config.WithLogger(logLevel, logFormat),
+			config.WithJWTToken(jwtToken))
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -40,7 +43,7 @@ func sendFakeRecord(conf *config.App) error {
 	conf.Logger.Debug("sendFakeRecord", "url", u)
 	record := core.FakeRecordJSON()
 	conf.Logger.Debug("sendFakeRecord", "record", record)
-	req := getHTTPRequest(http.MethodPost, u, record)
+	req := getHTTPRequest(http.MethodPost, u, record, conf.JWTToken)
 	// Send the HTTP request.
 	res, err := client.Do(req)
 	if err != nil {
