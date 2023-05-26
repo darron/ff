@@ -41,11 +41,11 @@
 - [x] Need to deal with nullable booleans - there's lots of data we don't have.
 - [x] e.Use(middleware.RequestID())
 - [x] Super hacky: Be able to see different types of Records: firearms only, mass shooting only, OIC firearms only, licensed mass shootings
-- [ ] Add totals to group pages?
+- [x] Add totals to group pages?
 - [ ] Do I need to add some contexts to track requests?
 - [ ] Add /healthz which tests for health of DB
 - [ ] Make it actually be organized.
-- [ ] Deploy to domain name
+- [ ] Deploy to domain name?
 - [ ] Add autoTLS - https://echo.labstack.com/cookbook/auto-tls/
 - [ ] Put Behind Cloudflare?
 - [ ] Integrate StatsCan homicide records.
