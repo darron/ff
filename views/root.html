@@ -5,10 +5,23 @@
     </head>
 <body style="margin:10px;">
     <h1>🇨🇦 Multiple Murders</h1>
-<table>
+<table class="sortable">
+    <thead>
     <tr>
-        <td>Date</td><td>Name</td><td>City</td><td>Province</td><td>Licensed</td><td>Victims</td><td>Deaths</td><td>Injuries</td><td>Suicide</td><td>Possessed Legally</td><td>Firearms</td><td>OIC Impact</td>
+        <th>Date</th>
+        <th>Name</th>
+        <th>City</th>
+        <th>Province</th>
+        <th>Licensed</th>
+        <th>Victims</th>
+        <th>Deaths</th>
+        <th>Injuries</th>
+        <th>Suicide</th>
+        <th>Possessed Legally</th>
+        <th>Firearms</th>
+        <th>OIC Impact</th>
     </tr>
+    </thead>
 {{range $val := .}}
 <tr>
 <td>{{$val.Date}}</td>
