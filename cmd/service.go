@@ -20,11 +20,14 @@ var (
 
 	defaultRedisConn = "127.0.0.1:6379"
 	redisConn        string
+
+	jwtSecret string
 )
 
 func init() {
 	rootCmd.AddCommand(serviceCmd)
 	serviceCmd.Flags().StringVarP(&redisConn, "redisConn", "r", GetENVVariable("REDIS", defaultRedisConn), "Redis connection string")
+	serviceCmd.Flags().StringVarP(&jwtSecret, "jwtSecret", "", GetENVVariable("JWT_SECRET", ""), "JWT Secret")
 }
 
 func StartService() {
@@ -34,6 +37,11 @@ func StartService() {
 	opts = append(opts, config.WithLogger(logLevel, logFormat))
 	// Once we have another db option - we'll adjust this.
 	opts = append(opts, config.WithRedis(redisConn))
+
+	// Let's enable JWT if it's defined.
+	if jwtSecret != "" {
+		opts = append(opts, config.WithJWTSecret(jwtSecret))
+	}
 
 	// Let's get the config for the app
 	conf, err := config.Get(opts...)

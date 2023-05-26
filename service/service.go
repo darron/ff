@@ -6,6 +6,7 @@ import (
 
 	"github.com/darron/ff/config"
 	"github.com/labstack/echo-contrib/prometheus"
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"gopkg.in/guregu/null.v4"
@@ -55,6 +56,11 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
+
+	// Turn on JWT if it's enabled
+	if s.conf.JWTSecret != "" {
+		e.Use(echojwt.JWT([]byte(s.conf.JWTSecret)))
+	}
 
 	// Routes
 	e.GET("/", s.Root)
