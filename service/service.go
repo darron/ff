@@ -57,20 +57,23 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
 
-	// Turn on JWT if it's enabled
+	// Turn on JWT for the APIPath.
+	// NOTE: This means unless you set JWT_SECRET deliberately
+	// those endpoints are effectively locked by default.
+	j := e.Group(APIPath)
 	if s.conf.JWTSecret != "" {
-		e.Use(echojwt.JWT([]byte(s.conf.JWTSecret)))
+		j.Use(echojwt.JWT([]byte(s.conf.JWTSecret)))
 	}
 
 	// Routes
 	e.GET("/", s.Root)
 	e.GET("/records/group/:group", s.Group)
 	e.GET("/records/:id", s.IndividualRecord)
-	e.GET(RecordsAPIPath+"/:id", s.GetRecord)
-	e.GET(RecordsAPIPath, s.GetAllRecords)
-	e.POST(RecordsAPIPath, s.CreateRecord)
-	e.GET(NewsStoriesAPIPath+"/:id", s.GetNewsStory)
-	e.POST(NewsStoriesAPIPath, s.CreateNewsStory)
+	j.GET(RecordsAPIPath+"/:id", s.GetRecord)
+	j.GET(RecordsAPIPath, s.GetAllRecords)
+	j.POST(RecordsAPIPath, s.CreateRecord)
+	j.GET(NewsStoriesAPIPath+"/:id", s.GetNewsStory)
+	j.POST(NewsStoriesAPIPath, s.CreateNewsStory)
 
 	return e, nil
 }

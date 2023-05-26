@@ -6,6 +6,7 @@ import (
 
 	"github.com/darron/ff/config"
 	"github.com/darron/ff/service"
+	"github.com/go-faker/faker/v4"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +28,7 @@ var (
 func init() {
 	rootCmd.AddCommand(serviceCmd)
 	serviceCmd.Flags().StringVarP(&redisConn, "redisConn", "r", GetENVVariable("REDIS", defaultRedisConn), "Redis connection string")
-	serviceCmd.Flags().StringVarP(&jwtSecret, "jwtSecret", "", GetENVVariable("JWT_SECRET", ""), "JWT Secret")
+	serviceCmd.Flags().StringVarP(&jwtSecret, "jwtSecret", "", GetENVVariable("JWT_SECRET", defaultJWTSecret()), "JWT Secret")
 }
 
 func StartService() {
@@ -56,4 +57,10 @@ func StartService() {
 		os.Exit(1)
 	}
 	s.Logger.Fatal(s.Start(":" + conf.Port))
+}
+
+// defaultJWTSecret sets a random password every time so that
+// our endpoints are ALWAYS protected.
+func defaultJWTSecret() string {
+	return faker.Password()
 }
