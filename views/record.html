@@ -3,11 +3,9 @@
         <title>firearms facts: {{.Name}} in {{.City}} in {{.Date}}</title>
         {{template "meta"}}
     </head>
-
-    <h1><a href="/">🇨🇦 Firearms Facts</a></h1>
-
+<body style="margin:10px;">
+    <h1><a href="/">🇨🇦 Multiple Murders</a></h1>
     <h2>{{.Name}} in {{.City}} in {{.Date}}</h2>
-
 <table>
     <tr>
         <td>Date</td><td>Name</td><td>City</td><td>Province</td><td>Licensed</td><td>Victims</td><td>Deaths</td><td>Injuries</td><td>Suicide</td><td>Possessed Legally</td><td>Firearms</td><td>OIC Impact</td>
@@ -39,4 +37,5 @@
 <div style="margin-bottom: 5px;"><a href="{{$val.URL}}">{{$val.URL}}</a></div>
 {{end}}
 {{template "footer"}}
+</body>
 </html>{{end}}

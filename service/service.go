@@ -54,6 +54,7 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.RequestID())
 
 	// Routes
 	e.GET("/", s.Root)

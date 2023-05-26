@@ -39,11 +39,11 @@
 - [x] Prometheus endpoint for /metrics
 - [x] Includes for HTML headers and things?
 - [x] Need to deal with nullable booleans - there's lots of data we don't have.
-- [ ] e.Use(middleware.RequestID())
+- [x] e.Use(middleware.RequestID())
+- [ ] Be able to see different types of Records: firearms only, mass shooting only, OIC firearms only, licensed mass shootings
 - [ ] Do I need to add some contexts to track requests?
 - [ ] Add /healthz which tests for health of DB
 - [ ] Make it actually be organized.
-- [ ] Be able to see different types of Records: firearms only, mass shooting only, OIC firearms only, licensed mass shootings
 - [ ] Deploy to domain name
 - [ ] Add autoTLS - https://echo.labstack.com/cookbook/auto-tls/
 - [ ] Put Behind Cloudflare?
