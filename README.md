@@ -42,6 +42,7 @@
 - [x] e.Use(middleware.RequestID())
 - [x] Super hacky: Be able to see different types of Records: firearms only, mass shooting only, OIC firearms only, licensed mass shootings
 - [x] Add totals to group pages?
+- [ ] Add tests for Group pages - get test coverage back to +80%
 - [ ] Do I need to add some contexts to track requests?
 - [ ] Add /healthz which tests for health of DB
 - [ ] Make it actually be organized.
@@ -54,6 +55,7 @@
 - [ ] Postgres/SQLite Implementation of NewsStory
 - [ ] Get CRUD working for Record
 - [ ] Get CRUD working for NewsStory
+- [ ] Add Search?
 - [ ] Integrate News Stories with Web downloading.
 - [ ] Integrate News Stories with AI Summaries.
 
