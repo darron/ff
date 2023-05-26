@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/darron/ff/core"
@@ -85,6 +86,14 @@ func GetGroup(group string, records []*core.Record) ([]core.Record, error) {
 				finalGroup = append(finalGroup, *record)
 			}
 		}
+	case "suicide":
+		for _, record := range records {
+			if record.Suicide.Bool {
+				finalGroup = append(finalGroup, *record)
+			}
+		}
+	default:
+		return finalGroup, errors.New("no group found")
 	}
 	return finalGroup, err
 }
