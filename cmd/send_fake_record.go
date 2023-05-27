@@ -36,7 +36,7 @@ var sendFakeRecordCmd = &cobra.Command{
 func sendFakeRecord(conf *config.App) error {
 	client := getHTTPClient()
 	// Make up the proper URL including port and path.
-	u, err := url.JoinPath(conf.GetHTTPEndpoint(), service.RecordsAPIPath)
+	u, err := url.JoinPath(conf.GetHTTPEndpoint(), service.RecordsAPIPathFull)
 	if err != nil {
 		return err
 	}

@@ -17,9 +17,11 @@ type HTTPService struct {
 }
 
 var (
-	APIPath            = "/api/v1"
-	NewsStoriesAPIPath = APIPath + "/stories"
-	RecordsAPIPath     = APIPath + "/records"
+	APIPath                = "/api/v1"
+	NewsStoriesAPIPath     = "/stories"
+	NewsStoriesAPIPathFull = APIPath + NewsStoriesAPIPath
+	RecordsAPIPath         = "/records"
+	RecordsAPIPathFull     = APIPath + RecordsAPIPath
 )
 
 type Template struct {
@@ -69,6 +71,12 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	e.GET("/", s.Root)
 	e.GET("/records/group/:group", s.Group)
 	e.GET("/records/:id", s.IndividualRecord)
+
+	// This Group adds the APIPath to the full path when it
+	// is created. This means we only need to path what
+	// is in addition to APIPath.
+	// NOTE: When calling the path in the cli, we have added
+	// the "Full" option which gives the entire path again.
 	j.GET(RecordsAPIPath+"/:id", s.GetRecord)
 	j.GET(RecordsAPIPath, s.GetAllRecords)
 	j.POST(RecordsAPIPath, s.CreateRecord)

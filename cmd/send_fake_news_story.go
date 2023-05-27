@@ -36,7 +36,7 @@ var sendFakeNewsStoryCmd = &cobra.Command{
 func sendFakeNewsStory(conf *config.App) error {
 	client := getHTTPClient()
 	// Make up the proper URL including port and path.
-	u, err := url.JoinPath(conf.GetHTTPEndpoint(), service.NewsStoriesAPIPath)
+	u, err := url.JoinPath(conf.GetHTTPEndpoint(), service.NewsStoriesAPIPathFull)
 	if err != nil {
 		return err
 	}

@@ -95,7 +95,7 @@ func doImport(conf *config.App) error {
 		// Setup the HTTP client:
 		client := getHTTPClient()
 		// Make up the proper URL including port and path.
-		u, err := url.JoinPath(conf.GetHTTPEndpoint(), service.RecordsAPIPath)
+		u, err := url.JoinPath(conf.GetHTTPEndpoint(), service.RecordsAPIPathFull)
 		if err != nil {
 			return err
 		}
