@@ -1,0 +1,17 @@
+version: '3'
+services:
+  ff:
+    image: darron/ff:21fc2d30c217c58e37285384d0a59dcbf53b70ae
+    ports:
+      - 8080:8080
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_BEARER_TOKEN=${JWT_BEARER_TOKEN}
+      - REDIS=redis:6379
+    depends_on:
+      - redis
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379

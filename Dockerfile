@@ -11,8 +11,8 @@ LABEL org.label-schema.vcs-url="https://github.com/darron/ff"
 RUN apk add --update --no-cache \
   ca-certificates && \
   rm -vf /var/cache/apk/*
-COPY --from=build /ff/views /bin/views
-COPY --from=build /ff/public /bin/public
-COPY --from=build /ff/bin/ff /bin/
 WORKDIR /
-ENTRYPOINT ["ff", "service"]
+COPY --from=build /ff/views /views
+COPY --from=build /ff/public /public
+COPY --from=build /ff/bin/ff /
+ENTRYPOINT ["./ff", "service"]
