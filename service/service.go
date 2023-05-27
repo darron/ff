@@ -73,10 +73,11 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	e.GET("/records/:id", s.IndividualRecord)
 
 	// This Group adds the APIPath to the full path when it
-	// is created. This means we only need to path what
+	// is created. This means we only need to supply what
 	// is in addition to APIPath.
-	// NOTE: When calling the path in the cli, we have added
-	// the "Full" option which gives the entire path again.
+	// NOTE: When calling the endpoint in the cli, we have added
+	// the "Full" option which gives the entire path including
+	// APIPath again.
 	j.GET(RecordsAPIPath+"/:id", s.GetRecord)
 	j.GET(RecordsAPIPath, s.GetAllRecords)
 	j.POST(RecordsAPIPath, s.CreateRecord)

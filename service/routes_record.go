@@ -23,14 +23,14 @@ func (s HTTPService) GetRecord(c echo.Context) error {
 }
 
 func (s HTTPService) CreateRecord(c echo.Context) error {
-	// // This should be protected.
+	// // TODO: We need to deal with claims to make sure.
 	// token, ok := c.Get("user").(*jwt.Token)
 	// if !ok {
-	// 	return c.JSON(http.StatusBadRequest, errors.New("JWT token missing or invalid"))
+	// 	return c.JSON(http.StatusBadRequest, "JWT token missing or invalid")
 	// }
 	// claims, ok := token.Claims.(jwt.MapClaims)
 	// if !ok {
-	// 	return c.JSON(http.StatusBadRequest, errors.New("failed to cast claims as jwt.MapClaims"))
+	// 	return c.JSON(http.StatusBadRequest, "failed to cast claims as jwt.MapClaims")
 	// }
 	// fmt.Printf("Claims: %#v\n", claims)
 	r := &core.Record{}
