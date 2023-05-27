@@ -44,8 +44,13 @@
 - [x] Add totals to group pages?
 - [x] Add tests for Group pages - get test coverage back to +80%
 - [x] ACLs for /api/ endpoints - protected by JWT requirement.
+- [x] Dockerfile so we can run it in Docker.
+- [ ] ?Refactor output of `GetAll` from []*core.Record to *[]core.Record?
+- [ ] In memory Adaptor?
+- [ ] Better Groups/Tags interface.
 - [ ] Add groups by Province and City?
-- [ ] Need some additional JWT work: actually check the claims - how to get them assigned to me?
+- [ ] skaffold + k8s files?
+- [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
 - [ ] Do I need to add some contexts to track requests?
 - [ ] Add /healthz which tests for health of DB?
 - [ ] Make it actually be organized.

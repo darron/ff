@@ -22,9 +22,6 @@ clean: ## Remove compiled binaries.
 docker: ## Build Docker image
 	docker buildx build . --platform linux/amd64,linux/arm64 -t $(CONTAINER_NAME):$(GIT_SHA) --push
 
-docker-curl: ## Build Docker image
-	docker buildx build -f Dockerfile.bash . --platform linux/amd64,linux/arm64 -t $(CONTAINER_NAME):curl --push
-
 build: clean
 	go build $(BUILD_COMMAND)
 
