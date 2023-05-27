@@ -34,7 +34,7 @@ func (s HTTPService) Group(c echo.Context) error {
 	// Let's get the subset
 	newRecords, err := GetGroup(group, records)
 	if err != nil {
-		return c.String(http.StatusInternalServerError, err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 	return c.Render(http.StatusOK, "records", newRecords)
 }
