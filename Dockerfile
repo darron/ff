@@ -15,4 +15,5 @@ WORKDIR /
 COPY --from=build /ff/views /views
 COPY --from=build /ff/public /public
 COPY --from=build /ff/bin/ff /
+COPY --from=build /ff/import.csv /
 ENTRYPOINT ["./ff", "service"]
