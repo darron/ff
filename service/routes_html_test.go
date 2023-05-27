@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/darron/ff/config"
+	"github.com/darron/ff/core"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
@@ -194,4 +195,36 @@ func TestGroup500(t *testing.T) {
 	if assert.NoError(t, s.Group(c)) {
 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 	}
+}
+
+func TestGetGroup(t *testing.T) {
+	var records []*core.Record
+	for i := 0; i < 200; i++ {
+		r := core.FakeRecord()
+		records = append(records, &r)
+	}
+	type test struct {
+		input []*core.Record
+		group string
+		err   error
+	}
+
+	tests := []test{
+		{input: records, group: "mass", err: nil},
+		{input: records, group: "massfirearms", err: nil},
+		{input: records, group: "massfirearmslicensed", err: nil},
+		{input: records, group: "massother", err: nil},
+		{input: records, group: "oic", err: nil},
+		{input: records, group: "suicide", err: nil},
+	}
+
+	for _, test := range tests {
+		_, got := GetGroup(test.group, test.input)
+		if got != test.err {
+			t.Errorf("Wanted: %q Got: %q", test.err, got)
+		}
+	}
+
+	_, err := GetGroup("does-not-exist", records)
+	assert.Error(t, err)
 }
