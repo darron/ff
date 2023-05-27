@@ -44,6 +44,7 @@
 - [x] Add totals to group pages?
 - [x] Add tests for Group pages - get test coverage back to +80%
 - [x] ACLs for /api/ endpoints - protected by JWT requirement.
+- [ ] Add groups by Province and City?
 - [ ] Need some additional JWT work: actually check the claims - how to get them assigned to me?
 - [ ] Do I need to add some contexts to track requests?
 - [ ] Add /healthz which tests for health of DB?
