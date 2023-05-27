@@ -6,6 +6,7 @@ import (
 
 	"github.com/darron/ff/config"
 	"github.com/labstack/echo-contrib/prometheus"
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"gopkg.in/guregu/null.v4"
@@ -16,9 +17,11 @@ type HTTPService struct {
 }
 
 var (
-	APIPath            = "/api/v1"
-	NewsStoriesAPIPath = APIPath + "/stories"
-	RecordsAPIPath     = APIPath + "/records"
+	APIPath                = "/api/v1"
+	NewsStoriesAPIPath     = "/stories"
+	NewsStoriesAPIPathFull = APIPath + NewsStoriesAPIPath
+	RecordsAPIPath         = "/records"
+	RecordsAPIPathFull     = APIPath + RecordsAPIPath
 )
 
 type Template struct {
@@ -56,15 +59,30 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
 
+	// Turn on JWT for the APIPath.
+	// NOTE: This means unless you set JWT_SECRET deliberately
+	// those endpoints are effectively locked by default.
+	j := e.Group(APIPath)
+	if s.conf.JWTSecret != "" {
+		j.Use(echojwt.JWT([]byte(s.conf.JWTSecret)))
+	}
+
 	// Routes
 	e.GET("/", s.Root)
 	e.GET("/records/group/:group", s.Group)
 	e.GET("/records/:id", s.IndividualRecord)
-	e.GET(RecordsAPIPath+"/:id", s.GetRecord)
-	e.GET(RecordsAPIPath, s.GetAllRecords)
-	e.POST(RecordsAPIPath, s.CreateRecord)
-	e.GET(NewsStoriesAPIPath+"/:id", s.GetNewsStory)
-	e.POST(NewsStoriesAPIPath, s.CreateNewsStory)
+
+	// This Group adds the APIPath to the full path when it
+	// is created. This means we only need to supply what
+	// is in addition to APIPath.
+	// NOTE: When calling the endpoint in the cli, we have added
+	// the "Full" option which gives the entire path including
+	// APIPath again.
+	j.GET(RecordsAPIPath+"/:id", s.GetRecord)
+	j.GET(RecordsAPIPath, s.GetAllRecords)
+	j.POST(RecordsAPIPath, s.CreateRecord)
+	j.GET(NewsStoriesAPIPath+"/:id", s.GetNewsStory)
+	j.POST(NewsStoriesAPIPath, s.CreateNewsStory)
 
 	return e, nil
 }

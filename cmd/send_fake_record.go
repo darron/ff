@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -19,7 +20,10 @@ var sendFakeRecordCmd = &cobra.Command{
 	Use:   "record",
 	Short: "Send fake core.Record to HTTP endpoint",
 	Run: func(cmd *cobra.Command, args []string) {
-		conf, err := config.Get(config.WithPort(port), config.WithLogger(logLevel, logFormat))
+		conf, err := config.Get(
+			config.WithPort(port),
+			config.WithLogger(logLevel, logFormat),
+			config.WithJWTToken(jwtToken))
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -33,19 +37,24 @@ var sendFakeRecordCmd = &cobra.Command{
 func sendFakeRecord(conf *config.App) error {
 	client := getHTTPClient()
 	// Make up the proper URL including port and path.
-	u, err := url.JoinPath(conf.GetHTTPEndpoint(), service.RecordsAPIPath)
+	u, err := url.JoinPath(conf.GetHTTPEndpoint(), service.RecordsAPIPathFull)
 	if err != nil {
 		return err
 	}
 	conf.Logger.Debug("sendFakeRecord", "url", u)
 	record := core.FakeRecordJSON()
 	conf.Logger.Debug("sendFakeRecord", "record", record)
-	req := getHTTPRequest(http.MethodPost, u, record)
+	req := getHTTPRequest(http.MethodPost, u, record, conf.JWTToken)
 	// Send the HTTP request.
 	res, err := client.Do(req)
 	if err != nil {
 		return err
 	}
 	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return err
+	}
+	conf.Logger.Info(string(body))
 	return nil
 }

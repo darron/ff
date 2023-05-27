@@ -42,15 +42,16 @@
 - [x] e.Use(middleware.RequestID())
 - [x] Super hacky: Be able to see different types of Records: firearms only, mass shooting only, OIC firearms only, licensed mass shootings
 - [x] Add totals to group pages?
-- [ ] Add tests for Group pages - get test coverage back to +80%
+- [x] Add tests for Group pages - get test coverage back to +80%
+- [x] ACLs for /api/ endpoints - protected by JWT requirement.
+- [ ] Need some additional JWT work: actually check the claims - how to get them assigned to me?
 - [ ] Do I need to add some contexts to track requests?
-- [ ] Add /healthz which tests for health of DB
+- [ ] Add /healthz which tests for health of DB?
 - [ ] Make it actually be organized.
 - [ ] Deploy to domain name?
 - [ ] Add autoTLS - https://echo.labstack.com/cookbook/auto-tls/
 - [ ] Put Behind Cloudflare?
 - [ ] Integrate StatsCan homicide records.
-- [ ] ACLs for /api/ endpoints
 - [ ] Postgres/SQLite Implementation of Record
 - [ ] Postgres/SQLite Implementation of NewsStory
 - [ ] Get CRUD working for Record

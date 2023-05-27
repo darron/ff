@@ -26,12 +26,15 @@ var (
 
 	defaultPort = "8080"
 	port        string
+
+	jwtToken string
 )
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&logLevel, "level", "", GetENVVariable("LOG_LEVEL", defaultLogLevel), "Log level: info, debug, etc")
 	rootCmd.PersistentFlags().StringVarP(&logFormat, "format", "", GetENVVariable("LOG_FORMAT", defaultLogFormat), "Log format: text or json")
 	rootCmd.PersistentFlags().StringVarP(&port, "port", "p", GetENVVariable("PORT", defaultPort), "HTTP Port to listen on")
+	rootCmd.PersistentFlags().StringVarP(&jwtToken, "jwt", "", GetENVVariable("JWT_BEARER_TOKEN", ""), "JWT Token to Access API endpoints.")
 }
 
 func Execute() {

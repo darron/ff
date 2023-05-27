@@ -8,6 +8,7 @@ require (
 	github.com/gojek/heimdall/v7 v7.0.2
 	github.com/google/uuid v1.3.0
 	github.com/labstack/echo-contrib v0.15.0
+	github.com/labstack/echo-jwt/v4 v4.2.0
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/redis/rueidis v1.0.4
 	github.com/spf13/cobra v1.7.0
@@ -24,6 +25,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gojek/valkyrie v0.0.0-20180215180059-6aee720afcdf // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
+	github.com/golang-jwt/jwt/v5 v5.0.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/labstack/gommon v0.4.0 // indirect

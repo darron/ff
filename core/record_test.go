@@ -9,6 +9,7 @@ import (
 )
 
 func TestRecordFaker(t *testing.T) {
+	CustomFakerData()
 	r := Record{}
 	err := faker.FakeData(&r)
 	if err != nil {

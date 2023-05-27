@@ -12,6 +12,8 @@ import (
 type OptFunc func(*Opts)
 
 type Opts struct {
+	JWTSecret           string
+	JWTToken            string
 	Logger              *slog.Logger
 	NewsStoryRepository core.NewsStoryService
 	Port                string
@@ -39,6 +41,18 @@ func WithRedis(conn string) OptFunc {
 	return func(opts *Opts) {
 		opts.RecordRepository = redis.NewRecordRepository(conn)
 		opts.NewsStoryRepository = redis.NewNewsStoryRepository(conn)
+	}
+}
+
+func WithJWTSecret(secret string) OptFunc {
+	return func(opts *Opts) {
+		opts.JWTSecret = secret
+	}
+}
+
+func WithJWTToken(token string) OptFunc {
+	return func(opts *Opts) {
+		opts.JWTToken = token
 	}
 }
 
