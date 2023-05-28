@@ -56,6 +56,12 @@ func StartService() {
 		conf.Logger.Error(err.Error())
 		os.Exit(1)
 	}
+
+	// Let's get something ready to import data on startup
+	// If it's available.
+	h := service.HTTPService{}
+	go h.ImportOnStartup(conf) //nolint
+
 	s.Logger.Fatal(s.Start(":" + conf.Port))
 }
 

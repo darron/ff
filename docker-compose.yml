@@ -1,7 +1,7 @@
 version: '3'
 services:
   ff:
-    image: darron/ff:b6356ffc8010bca7ffc30558539b414b76cc09be
+    image: darron/ff:b2720c6e8d88bd0487e99fca891a7806e6ab1633
     ports:
       - 8080:8080
     environment:

@@ -46,10 +46,10 @@
 - [x] ACLs for /api/ endpoints - protected by JWT requirement.
 - [x] Dockerfile so we can run it in Docker.
 - [x] Docker Compose file
-- [ ] ?Refactor output of `GetAll` from []*core.Record to *[]core.Record?
-- [ ] In memory Adaptor?
+- [ ] Import on startup if there are no records and import.csv is available
 - [ ] Better Groups/Tags interface.
 - [ ] Add groups by Province and City?
+- [ ] In memory Adaptor?
 - [ ] skaffold + k8s files?
 - [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
 - [ ] Do I need to add some contexts to track requests?
