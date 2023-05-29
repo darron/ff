@@ -47,8 +47,9 @@
 - [x] Dockerfile so we can run it in Docker.
 - [x] Docker Compose file
 - [x] Add autoTLS - https://echo.labstack.com/cookbook/auto-tls/
-- [ ] Import with TLS - needs to handle new ports and domain name.
+- [ ] Import with TLS - needs to handle new ports and domain name and HTTPS
 - [ ] Will need to do some performance tuning to get the memory down
+- [ ] Do we need a page cache? https://github.com/victorspringer/http-cache
 - [ ] Monitoring for uptime.
 - [ ] In memory Adaptor?
 - [ ] Better Groups/Tags interface.

@@ -45,9 +45,17 @@ lint: ## See https://github.com/golangci/golangci-lint#install for install instr
 	golangci-lint run ./...
 
 deploy:
+	export GOARCH=amd64
+	make linux
 	scp bin/ff root@$(DO_BOX):/root/ff
 	scp views/* root@$(DO_BOX):/root/views/
 	scp -rp public/* root@$(DO_BOX):/root/public/
 	scp import.csv root@$(DO_BOX):/root/import.csv
+	scp tls_cache/* root@$(DO_BOX):/root/tls_cache/
+	scp setup.sh root@$(DO_BOX):/root/setup.sh
+
+grab-files:
+	scp root@$(DO_BOX):/root/tls_cache/* tls_cache/
+	scp root@$(DO_BOX):/root/setup.sh setup.sh
 
 .PHONY: help all deps clean build gzip release unit lint docker docker-curl
