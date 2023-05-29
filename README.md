@@ -48,7 +48,7 @@
 - [x] Docker Compose file
 - [x] Add autoTLS - https://echo.labstack.com/cookbook/auto-tls/
 - [x] Do we need a page cache? https://github.com/victorspringer/http-cache - added https://github.com/SporkHubr/echo-http-cache
-- [ ] Too many Redis connections - need to reuse connections as much as possible.
+- [x] Too many Redis connections - need to close connections as much as possible.
 - [x] Import with TLS - needs to handle new ports and domain name and HTTPS
 - [ ] Will need to do some performance tuning once we have more traffic.
 - [ ] Monitoring for uptime.
