@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/darron/ff/adaptors/redis"
 	"github.com/darron/ff/core"
@@ -108,9 +109,15 @@ func Get(opts ...OptFunc) (*App, error) {
 }
 
 func (a *App) GetHTTPEndpoint() string {
-	// TODO: Will need to update once we move to HTTPS
-	// and a real domain name.
-	return fmt.Sprintf("http://localhost:%s", a.Port)
+	protocol := "http"
+	domain := "localhost"
+	port := a.Port
+	if a.TLS.DomainNames != "" {
+		protocol = "https"
+		domain = strings.Split(a.TLS.DomainNames, ",")[0]
+		port = "443"
+	}
+	return fmt.Sprintf("%s://%s:%s", protocol, domain, port)
 }
 
 func GetLogger(level, format string) *slog.Logger {
