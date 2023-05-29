@@ -25,6 +25,12 @@ var (
 	NewsStoriesAPIPathFull = APIPath + NewsStoriesAPIPath
 	RecordsAPIPath         = "/records"
 	RecordsAPIPathFull     = APIPath + RecordsAPIPath
+
+	// Middleware Cache settings
+	cacheCapacity   = 10000
+	cacheRefreshKey = "opn" // ?$cacheRefreshKey=true to a page to force a refresh
+	cacheTTL        = 32 * time.Hour
+	nonCachedPaths  = []string{"/api"}
 )
 
 type Template struct {
@@ -73,16 +79,16 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	// Let's setup the in memory cache as middleware.
 	memcached, err := memory.NewAdapter(
 		memory.AdapterWithAlgorithm(memory.LRU),
-		memory.AdapterWithCapacity(10000),
+		memory.AdapterWithCapacity(cacheCapacity),
 	)
 	if err != nil {
 		return e, err
 	}
 	cacheClient, err := cache.NewClient(
 		cache.ClientWithAdapter(memcached),
-		cache.ClientWithTTL(60*time.Minute),
-		cache.ClientWithRefreshKey("opn"),
-		cache.ClientWithRestrictedPaths([]string{"/api"}),
+		cache.ClientWithTTL(cacheTTL),
+		cache.ClientWithRefreshKey(cacheRefreshKey),
+		cache.ClientWithRestrictedPaths(nonCachedPaths),
 	)
 	if err != nil {
 		return e, err
