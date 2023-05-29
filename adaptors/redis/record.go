@@ -31,6 +31,11 @@ func (rr RecordRepository) Find(id string) (*core.Record, error) {
 		return &r, err
 	}
 	defer client.Close()
+	return rr.find(ctx, id, client)
+}
+
+func (rr RecordRepository) find(ctx context.Context, id string, client rueidis.Client) (*core.Record, error) {
+	r := core.Record{}
 	response, err := client.Do(ctx, client.B().Get().Key(id).Build()).ToString()
 	if err != nil {
 		return &r, err
@@ -46,7 +51,7 @@ func (rr RecordRepository) Find(id string) (*core.Record, error) {
 	// Get the NewsStoryRepository - don't really like this.
 	nsr := NewsStoryRepository{Conn: rr.Conn} //nolint
 	for _, storyID := range storiesSlice {
-		story, err := nsr.Find(storyID)
+		story, err := nsr.find(ctx, storyID, client)
 		if err != nil {
 			return &r, err
 		}
@@ -114,7 +119,7 @@ func (rr RecordRepository) GetAll() ([]*core.Record, error) {
 	}
 	// Grab all the Records
 	for _, recordID := range allRecordIDs {
-		record, err := rr.Find(recordID)
+		record, err := rr.find(ctx, recordID, client)
 		if err != nil {
 			return records, err
 		}

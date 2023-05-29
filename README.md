@@ -50,20 +50,23 @@
 - [x] Do we need a page cache? https://github.com/victorspringer/http-cache - added https://github.com/SporkHubr/echo-http-cache
 - [x] Too many Redis connections - need to close connections as much as possible.
 - [x] Import with TLS - needs to handle new ports and domain name and HTTPS
-- [ ] Will need to do some performance tuning once we have more traffic.
-- [ ] Monitoring for uptime.
+- [x] For Records and News Stories - more efficient way to download them all at once when using Redis. Right now we're opening and closing a new connection for each one.
+- [ ] Be able to enable / disable traces and profiling using flags.
+- [ ] Some sort of Analytics
 - [ ] Better Groups/Tags interface.
 - [ ] Add groups by Province and City?
+- [ ] Make it actually be organized.
+- [ ] Postgres/SQLite Implementation of Record
+- [ ] Postgres/SQLite Implementation of NewsStory
+- [ ] Will need to do some more performance tuning once we have more traffic.
+- [ ] Monitoring for uptime.
 - [ ] skaffold + k8s files?
 - [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
 - [ ] Do I need to add some contexts to track requests?
 - [ ] Add /healthz which tests for health of DB?
-- [ ] Make it actually be organized.
 - [ ] Deploy to domain name?
 - [ ] Put Behind Cloudflare?
 - [ ] Integrate StatsCan homicide records.
-- [ ] Postgres/SQLite Implementation of Record
-- [ ] Postgres/SQLite Implementation of NewsStory
 - [ ] Get CRUD working for Record
 - [ ] Get CRUD working for NewsStory
 - [ ] Add Search?
