@@ -10,26 +10,28 @@ import (
 )
 
 type NewsStoryRepository struct {
-	client rueidis.Client
+	Conn string
 }
 
-func NewNewsStoryRepository(conn string) core.NewsStoryService {
+func (nsr NewsStoryRepository) Connect(conn string) (rueidis.Client, error) {
 	client, err := rueidis.NewClient(rueidis.ClientOption{
 		InitAddress:       []string{conn},
 		DisableCache:      true,
 		RingScaleEachConn: 8,
 	})
-	if err != nil {
-		panic(err)
-	}
-	return NewsStoryRepository{client: client}
+	return client, err
 }
 
 func (nsr NewsStoryRepository) Find(id string) (*core.NewsStory, error) {
 	ns := core.NewsStory{}
 	ctx, cancel := context.WithTimeout(context.Background(), redisTimeout)
 	defer cancel()
-	response, err := nsr.client.Do(ctx, nsr.client.B().Get().Key(id).Build()).ToString()
+	client, err := nsr.Connect(nsr.Conn)
+	if err != nil {
+		return &ns, err
+	}
+	defer client.Close()
+	response, err := client.Do(ctx, client.B().Get().Key(id).Build()).ToString()
 	if err != nil {
 		return &ns, err
 	}
@@ -46,13 +48,18 @@ func (nsr NewsStoryRepository) Store(ns *core.NewsStory) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	err = nsr.client.Do(ctx, nsr.client.B().Set().Key(redisKey).Value(string(j)).Build()).Error()
+	client, err := nsr.Connect(nsr.Conn)
+	if err != nil {
+		return "", err
+	}
+	defer client.Close()
+	err = client.Do(ctx, client.B().Set().Key(redisKey).Value(string(j)).Build()).Error()
 	if err != nil {
 		return redisKey, err
 	}
 	// Add ID to list of all Stories for a record.
 	storyList := allStoriesPrefix + "-" + ns.RecordID
-	err = nsr.client.Do(ctx, nsr.client.B().Lpush().Key(storyList).Element(redisKey).Build()).Error()
+	err = client.Do(ctx, client.B().Lpush().Key(storyList).Element(redisKey).Build()).Error()
 	if err != nil {
 		return redisKey, err
 	}

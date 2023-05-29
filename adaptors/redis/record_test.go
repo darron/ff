@@ -9,7 +9,7 @@ import (
 
 func TestRecordStoreAndFind(t *testing.T) {
 	s := miniredis.RunT(t)
-	rr := NewRecordRepository(s.Addr())
+	rr := RecordRepository{Conn: s.Addr()}
 	r := core.FakeRecord()
 	storiesBefore := len(r.NewsStories)
 	r.ID = ""
@@ -36,7 +36,7 @@ func TestRecordStoreAndFind(t *testing.T) {
 
 func TestGetAll(t *testing.T) {
 	s := miniredis.RunT(t)
-	rr := NewRecordRepository(s.Addr())
+	rr := RecordRepository{Conn: s.Addr()}
 	for i := 1; i < 5; i++ {
 		r := core.FakeRecord()
 		id, err := rr.Store(&r)

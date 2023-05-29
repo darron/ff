@@ -9,7 +9,7 @@ import (
 
 func TestNewsStoryStoreAndFind(t *testing.T) {
 	s := miniredis.RunT(t)
-	rr := NewNewsStoryRepository(s.Addr())
+	rr := NewsStoryRepository{Conn: s.Addr()}
 	r := core.FakeNewsStory()
 	r.ID = ""
 	id, err := rr.Store(&r)
