@@ -16,8 +16,9 @@ type RecordRepository struct {
 
 func NewRecordRepository(conn string) core.RecordService {
 	client, err := rueidis.NewClient(rueidis.ClientOption{
-		InitAddress:  []string{conn},
-		DisableCache: true,
+		InitAddress:       []string{conn},
+		DisableCache:      true,
+		RingScaleEachConn: 8,
 	})
 	if err != nil {
 		panic(err)

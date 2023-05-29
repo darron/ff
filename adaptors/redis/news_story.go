@@ -15,8 +15,9 @@ type NewsStoryRepository struct {
 
 func NewNewsStoryRepository(conn string) core.NewsStoryService {
 	client, err := rueidis.NewClient(rueidis.ClientOption{
-		InitAddress:  []string{conn},
-		DisableCache: true,
+		InitAddress:       []string{conn},
+		DisableCache:      true,
+		RingScaleEachConn: 8,
 	})
 	if err != nil {
 		panic(err)
