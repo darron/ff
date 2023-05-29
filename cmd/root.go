@@ -28,6 +28,12 @@ var (
 	port        string
 
 	jwtToken string
+
+	defaultEnableTLS = false
+	enableTLS        bool
+	tlsCache         string
+	tlsDomains       string
+	tlsEmail         string
 )
 
 func init() {
@@ -35,6 +41,11 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&logFormat, "format", "", GetENVVariable("LOG_FORMAT", defaultLogFormat), "Log format: text or json")
 	rootCmd.PersistentFlags().StringVarP(&port, "port", "p", GetENVVariable("PORT", defaultPort), "HTTP Port to listen on")
 	rootCmd.PersistentFlags().StringVarP(&jwtToken, "jwt", "", GetENVVariable("JWT_BEARER_TOKEN", ""), "JWT Token to Access API endpoints.")
+	rootCmd.PersistentFlags().BoolVarP(&enableTLS, "tls", "", GetBoolENVVariable("ENABLE_TLS", defaultEnableTLS), "Enable TLS")
+	rootCmd.PersistentFlags().StringVarP(&tlsCache, "tlsCache", "", GetENVVariable("TLS_CACHE", ""), "Cache Dir for TLS Certificate")
+	rootCmd.PersistentFlags().StringVarP(&tlsDomains, "tlsDomains", "", GetENVVariable("TLS_DOMAINS", ""), "Domains for TLS Certificate - separate by commas")
+	rootCmd.PersistentFlags().StringVarP(&tlsEmail, "tlsEmail", "", GetENVVariable("TLS_EMAIL", ""), "Email Address for TLS Certificate")
+
 }
 
 func Execute() {

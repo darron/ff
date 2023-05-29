@@ -29,10 +29,24 @@ var (
 		Use:   "import",
 		Short: "Import CSV with data - exported from Google Sheet",
 		Run: func(cmd *cobra.Command, args []string) {
-			conf, err := config.Get(
-				config.WithPort(port),
-				config.WithLogger(logLevel, logFormat),
-				config.WithJWTToken(jwtToken))
+			var opts []config.OptFunc
+			opts = append(opts, config.WithPort(port))
+			opts = append(opts, config.WithLogger(logLevel, logFormat))
+			opts = append(opts, config.WithJWTToken(jwtToken))
+			if enableTLS {
+				tls := config.TLS{
+					CacheDir:    tlsCache,
+					DomainNames: tlsDomains,
+					Email:       tlsEmail,
+					Enable:      enableTLS,
+				}
+				err := tls.Verify()
+				if err != nil {
+					log.Fatal(err)
+				}
+				opts = append(opts, config.WithTLS(tls))
+			}
+			conf, err := config.Get(opts...)
 			if err != nil {
 				log.Fatal(err)
 			}
