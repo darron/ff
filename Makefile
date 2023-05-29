@@ -1,5 +1,6 @@
 BINARY_NAME ?= ff
 CONTAINER_NAME ?= darron/ff
+DO_BOX ?= 127.0.0.1
 
 BUILD_COMMAND=-mod=vendor -o bin/$(BINARY_NAME) ../$(BINARY_NAME)
 UNAME=$(shell uname -s | tr '[:upper:]' '[:lower:]')
@@ -42,5 +43,11 @@ unit: ## Run unit tests.
 
 lint: ## See https://github.com/golangci/golangci-lint#install for install instructions
 	golangci-lint run ./...
+
+deploy:
+	scp bin/ff root@$(DO_BOX):/root/ff
+	scp views/* root@$(DO_BOX):/root/views/
+	scp -rp public/* root@$(DO_BOX):/root/public/
+	scp import.csv root@$(DO_BOX):/root/import.csv
 
 .PHONY: help all deps clean build gzip release unit lint docker docker-curl
