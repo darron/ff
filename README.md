@@ -46,7 +46,8 @@
 - [x] ACLs for /api/ endpoints - protected by JWT requirement.
 - [x] Dockerfile so we can run it in Docker.
 - [x] Docker Compose file
-- [ ] ?Refactor output of `GetAll` from []*core.Record to *[]core.Record?
+- [ ] Add autoTLS - https://echo.labstack.com/cookbook/auto-tls/
+- [ ] Monitoring for uptime.
 - [ ] In memory Adaptor?
 - [ ] Better Groups/Tags interface.
 - [ ] Add groups by Province and City?
@@ -56,7 +57,6 @@
 - [ ] Add /healthz which tests for health of DB?
 - [ ] Make it actually be organized.
 - [ ] Deploy to domain name?
-- [ ] Add autoTLS - https://echo.labstack.com/cookbook/auto-tls/
 - [ ] Put Behind Cloudflare?
 - [ ] Integrate StatsCan homicide records.
 - [ ] Postgres/SQLite Implementation of Record

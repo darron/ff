@@ -1,13 +1,19 @@
 package cmd
 
 import (
+	"crypto/tls"
 	"log"
+	"net/http"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/darron/ff/config"
 	"github.com/darron/ff/service"
 	"github.com/go-faker/faker/v4"
 	"github.com/spf13/cobra"
+	"golang.org/x/crypto/acme"
+	"golang.org/x/crypto/acme/autocert"
 )
 
 var (
@@ -80,6 +86,29 @@ func StartService() {
 	if err != nil {
 		conf.Logger.Error(err.Error())
 		os.Exit(1)
+	}
+
+	// If we are going to turn on TLS - let's launch it.
+	if enableTLS {
+		domains := strings.Split(conf.TLS.DomainNames, ",")
+		autoTLSManager := autocert.Manager{
+			Prompt:     autocert.AcceptTOS,
+			Cache:      autocert.DirCache(conf.TLS.CacheDir),
+			Email:      conf.TLS.Email,
+			HostPolicy: autocert.HostWhitelist(domains...),
+		}
+		h := http.Server{
+			Addr:    ":443",
+			Handler: s,
+			TLSConfig: &tls.Config{
+				GetCertificate: autoTLSManager.GetCertificate,
+				NextProtos:     []string{acme.ALPNProto},
+			},
+			ReadTimeout: 30 * time.Second, // use custom timeouts
+		}
+		if err := h.ListenAndServeTLS("", ""); err != http.ErrServerClosed {
+			s.Logger.Fatal(err)
+		}
 	}
 	s.Logger.Fatal(s.Start(":" + conf.Port))
 }
