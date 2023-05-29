@@ -33,16 +33,12 @@ var (
 			opts = append(opts, config.WithPort(port))
 			opts = append(opts, config.WithLogger(logLevel, logFormat))
 			opts = append(opts, config.WithJWTToken(jwtToken))
-			if enableTLS {
+			// We only need the right domain name to connect with
+			// TLS - we don't need any of the other values.
+			if enableTLS && tlsDomains != "" {
 				tls := config.TLS{
-					CacheDir:    tlsCache,
 					DomainNames: tlsDomains,
-					Email:       tlsEmail,
 					Enable:      enableTLS,
-				}
-				err := tls.Verify()
-				if err != nil {
-					log.Fatal(err)
 				}
 				opts = append(opts, config.WithTLS(tls))
 			}
