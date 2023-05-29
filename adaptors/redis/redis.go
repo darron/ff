@@ -3,7 +3,7 @@ package redis
 import "time"
 
 var (
-	redisTimeout     = time.Second * 2
+	redisTimeout     = time.Second * 4
 	allRecords       = "records"
 	allStoriesPrefix = "stories"
 )
