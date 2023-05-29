@@ -10,27 +10,28 @@ import (
 )
 
 type RecordRepository struct {
-	client rueidis.Client
-	conn   string
+	Conn string
 }
 
-func NewRecordRepository(conn string) core.RecordService {
+func (rr RecordRepository) Connect(conn string) (rueidis.Client, error) {
 	client, err := rueidis.NewClient(rueidis.ClientOption{
 		InitAddress:       []string{conn},
 		DisableCache:      true,
 		RingScaleEachConn: 8,
 	})
-	if err != nil {
-		panic(err)
-	}
-	return RecordRepository{client: client, conn: conn}
+	return client, err
 }
 
 func (rr RecordRepository) Find(id string) (*core.Record, error) {
 	r := core.Record{}
 	ctx, cancel := context.WithTimeout(context.Background(), redisTimeout)
 	defer cancel()
-	response, err := rr.client.Do(ctx, rr.client.B().Get().Key(id).Build()).ToString()
+	client, err := rr.Connect(rr.Conn)
+	if err != nil {
+		return &r, err
+	}
+	defer client.Close()
+	response, err := client.Do(ctx, client.B().Get().Key(id).Build()).ToString()
 	if err != nil {
 		return &r, err
 	}
@@ -40,10 +41,10 @@ func (rr RecordRepository) Find(id string) (*core.Record, error) {
 	}
 	// Get all related NewsStories as well.
 	storiesKey := allStoriesPrefix + "-" + id
-	storiesSlice, err := rr.client.Do(ctx, rr.client.B().Lrange().Key(storiesKey).Start(0).Stop(-1).Build()).AsStrSlice()
+	storiesSlice, err := client.Do(ctx, client.B().Lrange().Key(storiesKey).Start(0).Stop(-1).Build()).AsStrSlice()
 	stories := []core.NewsStory{}
 	// Get the NewsStoryRepository - don't really like this.
-	nsr := NewNewsStoryRepository(rr.conn)
+	nsr := NewsStoryRepository{Conn: rr.Conn} //nolint
 	for _, storyID := range storiesSlice {
 		story, err := nsr.Find(storyID)
 		if err != nil {
@@ -60,6 +61,11 @@ func (rr RecordRepository) Store(r *core.Record) (string, error) {
 	r.ID = redisKey
 	ctx, cancel := context.WithTimeout(context.Background(), redisTimeout)
 	defer cancel()
+	client, err := rr.Connect(rr.Conn)
+	if err != nil {
+		return "", err
+	}
+	defer client.Close()
 	// Remove NewsStories to store them separately.
 	newsStories := r.NewsStories
 	r.NewsStories = nil
@@ -67,19 +73,19 @@ func (rr RecordRepository) Store(r *core.Record) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	err = rr.client.Do(ctx, rr.client.B().Set().Key(redisKey).Value(string(j)).Build()).Error()
+	err = client.Do(ctx, client.B().Set().Key(redisKey).Value(string(j)).Build()).Error()
 	if err != nil {
 		return redisKey, err
 	}
 	// Add ID to list of all Records
-	err = rr.client.Do(ctx, rr.client.B().Lpush().Key(allRecords).Element(redisKey).Build()).Error()
+	err = client.Do(ctx, client.B().Lpush().Key(allRecords).Element(redisKey).Build()).Error()
 	if err != nil {
 		return redisKey, err
 	}
 	// Add All NewsStories.
 	if len(newsStories) > 0 {
 		// Get the NewsStoryRepository - don't really like this.
-		nsr := NewNewsStoryRepository(rr.conn)
+		nsr := NewsStoryRepository{Conn: rr.Conn} //nolint
 		for _, story := range newsStories {
 			story.RecordID = redisKey
 			_, err := nsr.Store(&story)
@@ -97,7 +103,12 @@ func (rr RecordRepository) GetAll() ([]*core.Record, error) {
 	// Grab the list of IDs stored in allRecords
 	ctx, cancel := context.WithTimeout(context.Background(), redisTimeout)
 	defer cancel()
-	allRecordIDs, err := rr.client.Do(ctx, rr.client.B().Lrange().Key(allRecords).Start(0).Stop(-1).Build()).AsStrSlice()
+	client, err := rr.Connect(rr.Conn)
+	if err != nil {
+		return records, err
+	}
+	defer client.Close()
+	allRecordIDs, err := client.Do(ctx, client.B().Lrange().Key(allRecords).Start(0).Stop(-1).Build()).AsStrSlice()
 	if err != nil {
 		return records, err
 	}

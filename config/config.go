@@ -49,8 +49,8 @@ func defaultOpts() Opts {
 
 func WithRedis(conn string) OptFunc {
 	return func(opts *Opts) {
-		opts.RecordRepository = redis.NewRecordRepository(conn)
-		opts.NewsStoryRepository = redis.NewNewsStoryRepository(conn)
+		opts.RecordRepository = redis.RecordRepository{Conn: conn}
+		opts.NewsStoryRepository = redis.NewsStoryRepository{Conn: conn}
 	}
 }
 
