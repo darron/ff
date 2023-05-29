@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -51,7 +51,7 @@ func sendFakeRecord(conf *config.App) error {
 		return err
 	}
 	defer res.Body.Close()
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		return err
 	}
