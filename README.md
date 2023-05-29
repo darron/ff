@@ -46,7 +46,7 @@
 - [x] ACLs for /api/ endpoints - protected by JWT requirement.
 - [x] Dockerfile so we can run it in Docker.
 - [x] Docker Compose file
-- [ ] Add autoTLS - https://echo.labstack.com/cookbook/auto-tls/
+- [x] Add autoTLS - https://echo.labstack.com/cookbook/auto-tls/
 - [ ] Monitoring for uptime.
 - [ ] In memory Adaptor?
 - [ ] Better Groups/Tags interface.
