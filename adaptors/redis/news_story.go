@@ -31,6 +31,11 @@ func (nsr NewsStoryRepository) Find(id string) (*core.NewsStory, error) {
 		return &ns, err
 	}
 	defer client.Close()
+	return nsr.find(ctx, id, client)
+}
+
+func (nsr NewsStoryRepository) find(ctx context.Context, id string, client rueidis.Client) (*core.NewsStory, error) {
+	ns := core.NewsStory{}
 	response, err := client.Do(ctx, client.B().Get().Key(id).Build()).ToString()
 	if err != nil {
 		return &ns, err
