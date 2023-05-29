@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -18,6 +19,14 @@ type Opts struct {
 	NewsStoryRepository core.NewsStoryService
 	Port                string
 	RecordRepository    core.RecordService
+	TLS                 TLS
+}
+
+type TLS struct {
+	CacheDir    string
+	DomainNames string
+	Email       string
+	Enable      bool
 }
 
 type App struct {
@@ -66,6 +75,12 @@ func WithLogger(level, format string) OptFunc {
 func WithPort(port string) OptFunc {
 	return func(opts *Opts) {
 		opts.Port = port
+	}
+}
+
+func WithTLS(tls TLS) OptFunc {
+	return func(opts *Opts) {
+		opts.TLS = tls
 	}
 }
 
@@ -123,4 +138,25 @@ func GetLogger(level, format string) *slog.Logger {
 	log := slog.New(slogHandler)
 
 	return log
+}
+
+func (t TLS) Verify() error {
+	if t.CacheDir == "" {
+		return errors.New("Cache dir cannot be emtpy")
+	}
+	// Check to see if the cache dir exists - if it doesn't try to create it.
+	if _, err := os.Open(t.CacheDir); os.IsNotExist(err) {
+		// It doesn't exist - try to create it.
+		err := os.MkdirAll(t.CacheDir, 0750)
+		if err != nil {
+			return err
+		}
+	}
+	if t.DomainNames == "" {
+		return errors.New("Domain names cannot be empty")
+	}
+	if t.Email == "" {
+		return errors.New("Email address cannot be empty")
+	}
+	return nil
 }

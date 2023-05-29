@@ -51,3 +51,11 @@ func GetENVVariable(name, defValue string) string {
 	}
 	return defValue
 }
+
+func GetBoolENVVariable(name string, defValue bool) bool {
+	_, ok := os.LookupEnv(name)
+	if ok {
+		return true
+	}
+	return defValue
+}

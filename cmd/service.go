@@ -23,12 +23,22 @@ var (
 	redisConn        string
 
 	jwtSecret string
+
+	defaultEnableTLS = false
+	enableTLS        bool
+	tlsCache         string
+	tlsDomains       string
+	tlsEmail         string
 )
 
 func init() {
 	rootCmd.AddCommand(serviceCmd)
 	serviceCmd.Flags().StringVarP(&redisConn, "redisConn", "r", GetENVVariable("REDIS", defaultRedisConn), "Redis connection string")
 	serviceCmd.Flags().StringVarP(&jwtSecret, "jwtSecret", "", GetENVVariable("JWT_SECRET", defaultJWTSecret()), "JWT Secret")
+	serviceCmd.Flags().BoolVarP(&enableTLS, "tls", "", GetBoolENVVariable("ENABLE_TLS", defaultEnableTLS), "Enable TLS")
+	serviceCmd.Flags().StringVarP(&tlsCache, "tlsCache", "", GetENVVariable("TLS_CACHE", ""), "Cache Dir for TLS Certificate")
+	serviceCmd.Flags().StringVarP(&tlsDomains, "tlsDomains", "", GetENVVariable("TLS_DOMAINS", ""), "Domains for TLS Certificate - separate by commas")
+	serviceCmd.Flags().StringVarP(&tlsEmail, "tlsEmail", "", GetENVVariable("TLS_EMAIL", ""), "Email Address for TLS Certificate")
 }
 
 func StartService() {
@@ -42,6 +52,21 @@ func StartService() {
 	// Let's enable JWT if it's defined.
 	if jwtSecret != "" {
 		opts = append(opts, config.WithJWTSecret(jwtSecret))
+	}
+
+	// Let's turn on TLS.
+	if enableTLS {
+		tls := config.TLS{
+			CacheDir:    tlsCache,
+			DomainNames: tlsDomains,
+			Email:       tlsEmail,
+			Enable:      enableTLS,
+		}
+		err := tls.Verify()
+		if err != nil {
+			log.Fatal(err)
+		}
+		opts = append(opts, config.WithTLS(tls))
 	}
 
 	// Let's get the config for the app
