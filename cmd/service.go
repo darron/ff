@@ -14,6 +14,8 @@ import (
 	"github.com/spf13/cobra"
 	"golang.org/x/crypto/acme"
 	"golang.org/x/crypto/acme/autocert"
+	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
+	"gopkg.in/DataDog/dd-trace-go.v1/profiler"
 )
 
 var (
@@ -80,6 +82,33 @@ func StartService() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Let's setup some tracing and profiling:
+	tracer.Start(
+		tracer.WithService("ff"),
+		tracer.WithEnv("production"),
+	)
+	defer tracer.Stop()
+
+	err = profiler.Start(
+		profiler.WithService("ff"),
+		profiler.WithEnv("production"),
+		profiler.WithProfileTypes(
+			profiler.CPUProfile,
+			profiler.HeapProfile,
+
+			// The profiles below are disabled by
+			// default to keep overhead low, but
+			// can be enabled as needed.
+			// profiler.BlockProfile,
+			// profiler.MutexProfile,
+			// profiler.GoroutineProfile,
+		),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer profiler.Stop()
 
 	conf.Logger.Info("Starting HTTP Service")
 	s, err := service.Get(conf)
