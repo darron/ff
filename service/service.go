@@ -3,7 +3,10 @@ package service
 import (
 	"html/template"
 	"io"
+	"time"
 
+	cache "github.com/SporkHubr/echo-http-cache"
+	"github.com/SporkHubr/echo-http-cache/adapter/memory"
 	"github.com/darron/ff/config"
 	"github.com/labstack/echo-contrib/prometheus"
 	echojwt "github.com/labstack/echo-jwt/v4"
@@ -66,6 +69,25 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	if s.conf.JWTSecret != "" {
 		j.Use(echojwt.JWT([]byte(s.conf.JWTSecret)))
 	}
+
+	// Let's setup the in memory cache as middleware.
+	memcached, err := memory.NewAdapter(
+		memory.AdapterWithAlgorithm(memory.LRU),
+		memory.AdapterWithCapacity(10000),
+	)
+	if err != nil {
+		return e, err
+	}
+	cacheClient, err := cache.NewClient(
+		cache.ClientWithAdapter(memcached),
+		cache.ClientWithTTL(60*time.Minute),
+		cache.ClientWithRefreshKey("opn"),
+		cache.ClientWithRestrictedPaths([]string{"/api"}),
+	)
+	if err != nil {
+		return e, err
+	}
+	e.Use(cacheClient.Middleware())
 
 	// Routes
 	e.GET("/", s.Root)

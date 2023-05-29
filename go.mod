@@ -3,6 +3,7 @@ module github.com/darron/ff
 go 1.20
 
 require (
+	github.com/SporkHubr/echo-http-cache v0.0.0-20200706100054-1d7ae9f38029
 	github.com/alicebob/miniredis/v2 v2.30.2
 	github.com/go-faker/faker/v4 v4.1.0
 	github.com/gojek/heimdall/v7 v7.0.2
