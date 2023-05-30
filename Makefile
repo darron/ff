@@ -44,9 +44,8 @@ unit: ## Run unit tests.
 lint: ## See https://github.com/golangci/golangci-lint#install for install instructions
 	golangci-lint run ./...
 
-deploy:
-	export GOARCH=amd64
-	make linux
+deploy: clean
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build $(BUILD_COMMAND)
 	scp bin/ff root@$(DO_BOX):/root/ff
 	scp views/* root@$(DO_BOX):/root/views/
 	scp -rp public/* root@$(DO_BOX):/root/public/
