@@ -52,7 +52,6 @@
 - [x] Import with TLS - needs to handle new ports and domain name and HTTPS
 - [x] For Records and News Stories - more efficient way to download them all at once when using Redis. Right now we're opening and closing a new connection for each one.
 - [x] Be able to enable / disable traces and profiling using flags.
-- [ ] Some sort of Analytics
 - [ ] Better Groups/Tags interface.
 - [ ] Add groups by Province and City?
 - [ ] Make it actually be organized.
@@ -64,6 +63,7 @@
 - [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
 - [ ] Do I need to add some contexts to track requests?
 - [ ] Add /healthz which tests for health of DB?
+- [ ] Some sort of Analytics
 - [ ] Deploy to domain name?
 - [ ] Put Behind Cloudflare?
 - [ ] Integrate StatsCan homicide records.
