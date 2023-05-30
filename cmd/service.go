@@ -31,12 +31,16 @@ var (
 	redisConn        string
 
 	jwtSecret string
+
+	defaultProfilingEnabled = false
+	profilingEnabled        bool
 )
 
 func init() {
 	rootCmd.AddCommand(serviceCmd)
 	serviceCmd.Flags().StringVarP(&redisConn, "redisConn", "r", GetENVVariable("REDIS", defaultRedisConn), "Redis connection string")
 	serviceCmd.Flags().StringVarP(&jwtSecret, "jwtSecret", "", GetENVVariable("JWT_SECRET", defaultJWTSecret()), "JWT Secret")
+	serviceCmd.Flags().BoolVarP(&profilingEnabled, "profiling", "", GetBoolENVVariable("PROFILING_ENABLED", defaultProfilingEnabled), "Enable Datadog tracing and profiling")
 }
 
 func StartService() {
@@ -73,32 +77,27 @@ func StartService() {
 		log.Fatal(err)
 	}
 
-	// Let's setup some tracing and profiling:
-	tracer.Start(
-		tracer.WithService("ff"),
-		tracer.WithEnv("production"),
-	)
-	defer tracer.Stop()
+	// Let's setup DD tracing and profiling:
+	// NOTE: Make sure to set DD_ENV
+	// for each place you're running this.
+	if profilingEnabled {
+		tracer.Start(
+			tracer.WithService("ff"),
+		)
+		defer tracer.Stop()
 
-	err = profiler.Start(
-		profiler.WithService("ff"),
-		profiler.WithEnv("production"),
-		profiler.WithProfileTypes(
-			profiler.CPUProfile,
-			profiler.HeapProfile,
-
-			// The profiles below are disabled by
-			// default to keep overhead low, but
-			// can be enabled as needed.
-			// profiler.BlockProfile,
-			// profiler.MutexProfile,
-			// profiler.GoroutineProfile,
-		),
-	)
-	if err != nil {
-		log.Fatal(err)
+		err = profiler.Start(
+			profiler.WithService("ff"),
+			profiler.WithProfileTypes(
+				profiler.CPUProfile,
+				profiler.HeapProfile,
+			),
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer profiler.Stop()
 	}
-	defer profiler.Stop()
 
 	conf.Logger.Info("Starting HTTP Service")
 	s, err := service.Get(conf)

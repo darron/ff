@@ -51,7 +51,7 @@
 - [x] Too many Redis connections - need to close connections as much as possible.
 - [x] Import with TLS - needs to handle new ports and domain name and HTTPS
 - [x] For Records and News Stories - more efficient way to download them all at once when using Redis. Right now we're opening and closing a new connection for each one.
-- [ ] Be able to enable / disable traces and profiling using flags.
+- [x] Be able to enable / disable traces and profiling using flags.
 - [ ] Some sort of Analytics
 - [ ] Better Groups/Tags interface.
 - [ ] Add groups by Province and City?
