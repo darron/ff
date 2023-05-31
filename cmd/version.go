@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/darron/ff/config"
@@ -25,6 +26,5 @@ func version() {
 		log.Fatal(err)
 	}
 	v := config.GetVersionInfo()
-	bsMap := config.GetBuildSettings(v)
-	conf.Logger.Info("Version", "go", v.GoVersion, "sha", bsMap["revision"], "time", bsMap["time"], "dirtyTree", bsMap["modified"])
+	conf.Logger.Info("Version Info", "info", fmt.Sprintf("%#v\n", v))
 }

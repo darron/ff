@@ -100,6 +100,9 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	e.GET("/records/group/:group", s.Group)
 	e.GET("/records/:id", s.IndividualRecord)
 
+	// Infra
+	e.GET("/version", s.Version)
+
 	// This Group adds the APIPath to the full path when it
 	// is created. This means we only need to supply what
 	// is in addition to APIPath.

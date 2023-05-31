@@ -1,25 +1,22 @@
 package config
 
 import (
-	dbg "runtime/debug"
+	"time"
+
+	"github.com/carlmjohnson/versioninfo"
 )
 
-func GetVersionInfo() *dbg.BuildInfo {
-	i, _ := dbg.ReadBuildInfo()
-	return i
+type VersionInfo struct {
+	Revision   string    `json:"revision"`
+	DirtyBuild bool      `json:"dirty_build"`
+	LastCommit time.Time `json:"last_commit"`
 }
 
-func GetBuildSettings(i *dbg.BuildInfo) map[string]string {
-	m := make(map[string]string)
-	for _, setting := range i.Settings {
-		switch setting.Key {
-		case "vcs.revision":
-			m["revision"] = setting.Value
-		case "vcs.modified":
-			m["modified"] = setting.Value
-		case "vcs.time":
-			m["time"] = setting.Value
-		}
+func GetVersionInfo() VersionInfo {
+	v := VersionInfo{
+		Revision:   versioninfo.Revision,
+		DirtyBuild: versioninfo.DirtyBuild,
+		LastCommit: versioninfo.LastCommit,
 	}
-	return m
+	return v
 }
