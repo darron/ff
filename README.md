@@ -52,13 +52,13 @@
 - [x] Import with TLS - needs to handle new ports and domain name and HTTPS
 - [x] For Records and News Stories - more efficient way to download them all at once when using Redis. Right now we're opening and closing a new connection for each one.
 - [x] Be able to enable / disable traces and profiling using flags.
+- [x] Monitoring for uptime.
+- [ ] Add Feature Flag Interface - use in-memory / augmented by written file - https://openfeature.dev/ - https://github.com/open-feature/flagd
 - [ ] Better Groups/Tags interface.
 - [ ] Add groups by Province and City?
-- [ ] Make it actually be organized.
+- [ ] Make it actually be organized/designed?
 - [ ] Postgres/SQLite Implementation of Record
 - [ ] Postgres/SQLite Implementation of NewsStory
-- [ ] Will need to do some more performance tuning once we have more traffic.
-- [ ] Monitoring for uptime.
 - [ ] skaffold + k8s files?
 - [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
 - [ ] Do I need to add some contexts to track requests?
@@ -70,6 +70,7 @@
 - [ ] Get CRUD working for Record
 - [ ] Get CRUD working for NewsStory
 - [ ] Add Search?
+- [ ] Might need to do some more performance tuning once we have more traffic.
 - [ ] Integrate News Stories with Web downloading.
 - [ ] Integrate News Stories with AI Summaries.
 
