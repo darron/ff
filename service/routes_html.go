@@ -3,9 +3,14 @@ package service
 import (
 	"errors"
 	"net/http"
+	"strings"
 
 	"github.com/darron/ff/core"
 	"github.com/labstack/echo/v4"
+)
+
+var (
+	provinces = []string{"BC", "AB", "ON", "NT", "YT", "NB", "NL", "NS", "PE", "QC", "MB", "SK", "NU", "USA"}
 )
 
 func (s HTTPService) Root(c echo.Context) error {
@@ -49,6 +54,49 @@ func (s HTTPService) IndividualRecord(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 	return c.Render(http.StatusOK, "record", r)
+}
+
+func (s HTTPService) Province(c echo.Context) error {
+	province := c.Param("province")
+	if province == "" {
+		return c.String(http.StatusNotFound, "province must not be blank")
+	}
+	records, err := s.conf.RecordRepository.GetAll()
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	// Let's get the subset
+	newRecords, err := GetProvince(province, records)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	return c.Render(http.StatusOK, "records", newRecords)
+}
+
+func GetProvince(province string, records []*core.Record) ([]core.Record, error) {
+	var finalGroup []core.Record
+	var err error
+	province = strings.ToUpper(province)
+	// Let's make sure it's a real thing.
+	if !contains(province, provinces) {
+		return finalGroup, errors.New("that is not a province")
+	}
+	for _, record := range records {
+		if record.Province == province {
+			finalGroup = append(finalGroup, *record)
+		}
+	}
+	return finalGroup, err
+}
+
+func contains(needle string, haystack []string) bool {
+	var isItHere bool
+	for _, hay := range haystack {
+		if needle == hay {
+			return true
+		}
+	}
+	return isItHere
 }
 
 func GetGroup(group string, records []*core.Record) ([]core.Record, error) {

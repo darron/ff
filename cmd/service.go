@@ -34,6 +34,9 @@ var (
 
 	defaultProfilingEnabled = false
 	profilingEnabled        bool
+
+	defaultMiddlewareHTMLCacheEnabled = true
+	middlewareHTMLCacheEnabled        bool
 )
 
 func init() {
@@ -41,6 +44,7 @@ func init() {
 	serviceCmd.Flags().StringVarP(&redisConn, "redisConn", "r", GetENVVariable("REDIS", defaultRedisConn), "Redis connection string")
 	serviceCmd.Flags().StringVarP(&jwtSecret, "jwtSecret", "", GetENVVariable("JWT_SECRET", defaultJWTSecret()), "JWT Secret")
 	serviceCmd.Flags().BoolVarP(&profilingEnabled, "profiling", "", GetBoolENVVariable("PROFILING_ENABLED", defaultProfilingEnabled), "Enable Datadog tracing and profiling")
+	serviceCmd.Flags().BoolVarP(&middlewareHTMLCacheEnabled, "htmlcache", "", GetBoolENVVariable("HTMLCACHE_ENABLED", defaultMiddlewareHTMLCacheEnabled), "Enable Middleware Cache")
 }
 
 func StartService() {
@@ -48,6 +52,8 @@ func StartService() {
 	var opts []config.OptFunc
 	opts = append(opts, config.WithPort(port))
 	opts = append(opts, config.WithLogger(logLevel, logFormat))
+	opts = append(opts, config.WithMiddlewareHTMLCache(middlewareHTMLCacheEnabled))
+
 	// Once we have another db option - we'll adjust this.
 	opts = append(opts, config.WithRedis(redisConn))
 

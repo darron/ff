@@ -27,7 +27,7 @@
 <td>{{.Date}}</td>
 <td>{{.Name}}</td>
 <td>{{.City}}</td>
-<td>{{.Province}}</td>
+<td><a href="/records/provinces/{{toLower .Province}}">{{.Province}}</a></td>
 <td>{{nullbool .Licensed}}</td>
 <td>{{.Victims}}</td>
 <td>{{.Deaths}}</td>

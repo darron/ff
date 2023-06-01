@@ -17,6 +17,7 @@ type Opts struct {
 	JWTSecret           string
 	JWTToken            string
 	Logger              *slog.Logger
+	MiddlewareHTMLCache bool
 	NewsStoryRepository core.NewsStoryService
 	Port                string
 	RecordRepository    core.RecordService
@@ -35,15 +36,17 @@ type App struct {
 }
 
 var (
-	defaultLogformat = "text"
-	defaultLogLevel  = "debug"
-	defaultPort      = "8080"
-	defaultRedis     = "127.0.0.1:6379"
+	defaultLogformat           = "text"
+	defaultLogLevel            = "debug"
+	defaultPort                = "8080"
+	defaultRedis               = "127.0.0.1:6379"
+	defaultHTMLMiddlewareCache = true
 )
 
 func defaultOpts() Opts {
 	return Opts{
-		Port: defaultPort,
+		Port:                defaultPort,
+		MiddlewareHTMLCache: true,
 	}
 }
 
@@ -51,6 +54,12 @@ func WithRedis(conn string) OptFunc {
 	return func(opts *Opts) {
 		opts.RecordRepository = redis.RecordRepository{Conn: conn}
 		opts.NewsStoryRepository = redis.NewsStoryRepository{Conn: conn}
+	}
+}
+
+func WithMiddlewareHTMLCache(enabled bool) OptFunc {
+	return func(opts *Opts) {
+		opts.MiddlewareHTMLCache = enabled
 	}
 }
 
@@ -93,6 +102,7 @@ func New() (*App, error) {
 	optFuncs = append(optFuncs, WithLogger(defaultLogLevel, defaultLogformat))
 	optFuncs = append(optFuncs, WithPort(defaultPort))
 	optFuncs = append(optFuncs, WithRedis(defaultRedis))
+	optFuncs = append(optFuncs, WithMiddlewareHTMLCache(defaultHTMLMiddlewareCache))
 
 	return Get(optFuncs...)
 }

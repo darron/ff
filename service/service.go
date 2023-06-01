@@ -3,6 +3,7 @@ package service
 import (
 	"html/template"
 	"io"
+	"strings"
 	"time"
 
 	cache "github.com/SporkHubr/echo-http-cache"
@@ -77,26 +78,29 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	}
 
 	// Let's setup the in memory cache as middleware.
-	memcached, err := memory.NewAdapter(
-		memory.AdapterWithAlgorithm(memory.LRU),
-		memory.AdapterWithCapacity(cacheCapacity),
-	)
-	if err != nil {
-		return e, err
+	if s.conf.MiddlewareHTMLCache {
+		memcached, err := memory.NewAdapter(
+			memory.AdapterWithAlgorithm(memory.LRU),
+			memory.AdapterWithCapacity(cacheCapacity),
+		)
+		if err != nil {
+			return e, err
+		}
+		cacheClient, err := cache.NewClient(
+			cache.ClientWithAdapter(memcached),
+			cache.ClientWithTTL(cacheTTL),
+			cache.ClientWithRefreshKey(cacheRefreshKey),
+			cache.ClientWithRestrictedPaths(nonCachedPaths),
+		)
+		if err != nil {
+			return e, err
+		}
+		e.Use(cacheClient.Middleware())
 	}
-	cacheClient, err := cache.NewClient(
-		cache.ClientWithAdapter(memcached),
-		cache.ClientWithTTL(cacheTTL),
-		cache.ClientWithRefreshKey(cacheRefreshKey),
-		cache.ClientWithRestrictedPaths(nonCachedPaths),
-	)
-	if err != nil {
-		return e, err
-	}
-	e.Use(cacheClient.Middleware())
 
 	// Routes
 	e.GET("/", s.Root)
+	e.GET("/records/provinces/:province", s.Province)
 	e.GET("/records/group/:group", s.Group)
 	e.GET("/records/:id", s.IndividualRecord)
 
@@ -134,6 +138,7 @@ func GetTemplates(p string) (*Template, error) {
 	}
 	funcMap := template.FuncMap{
 		"nullbool": nullbool,
+		"toLower":  strings.ToLower,
 	}
 	t.templates = t.templates.Funcs(funcMap)
 	_, err := t.templates.ParseGlob(p)

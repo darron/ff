@@ -228,3 +228,14 @@ func TestGetGroup(t *testing.T) {
 	_, err := GetGroup("does-not-exist", records)
 	assert.Error(t, err)
 }
+
+func TestContains(t *testing.T) {
+	haystack := []string{"one", "two", "three", "four", "five"}
+	needles := []string{"one", "two", "three", "four"}
+	for _, needle := range needles {
+		result := contains(needle, haystack)
+		assert.True(t, result)
+	}
+	result := contains("nope", haystack)
+	assert.False(t, result)
+}

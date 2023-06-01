@@ -28,7 +28,7 @@
 <td>{{$val.Date}}</td>
 <td><a href="/records/{{$val.ID}}">{{$val.Name}}</a></td>
 <td>{{$val.City}}</td>
-<td>{{$val.Province}}</td>
+<td><a href="/records/provinces/{{toLower $val.Province}}">{{$val.Province}}</a></td>
 <td>{{nullbool $val.Licensed}}</td>
 <td>{{$val.Victims}}</td>
 <td>{{$val.Deaths}}</td>

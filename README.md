@@ -53,14 +53,15 @@
 - [x] For Records and News Stories - more efficient way to download them all at once when using Redis. Right now we're opening and closing a new connection for each one.
 - [x] Be able to enable / disable traces and profiling using flags.
 - [x] Monitoring for uptime.
+- [x] Add groups by Province and City?
+- [x] Be able to disabled caching by flag.
+- [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
 - [ ] Add Feature Flag Interface - use in-memory / augmented by written file - https://openfeature.dev/ - https://github.com/open-feature/flagd
 - [ ] Better Groups/Tags interface.
-- [ ] Add groups by Province and City?
 - [ ] Make it actually be organized/designed?
 - [ ] Postgres/SQLite Implementation of Record
 - [ ] Postgres/SQLite Implementation of NewsStory
 - [ ] skaffold + k8s files?
-- [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
 - [ ] Do I need to add some contexts to track requests?
 - [ ] Add /healthz which tests for health of DB?
 - [ ] Some sort of Analytics
