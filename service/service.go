@@ -68,6 +68,7 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
+	e.Use(middleware.Gzip())
 
 	// Turn on JWT for the APIPath.
 	// NOTE: This means unless you set JWT_SECRET deliberately
