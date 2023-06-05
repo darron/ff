@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"testing"
 
+	"github.com/darron/ff/config"
+	"github.com/stretchr/testify/assert"
 	"gopkg.in/guregu/null.v4"
 )
 
@@ -26,4 +28,10 @@ func TestNullBool(t *testing.T) {
 			t.Error("They must match")
 		}
 	}
+}
+
+func TestGet(t *testing.T) {
+	conf, _ := config.New()
+	_, err := Get(conf, "../views/*.html")
+	assert.NoError(t, err)
 }

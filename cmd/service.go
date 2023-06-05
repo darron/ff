@@ -106,7 +106,7 @@ func StartService() {
 	}
 
 	conf.Logger.Info("Starting HTTP Service")
-	s, err := service.Get(conf)
+	s, err := service.Get(conf, "views/*.html")
 	if err != nil {
 		conf.Logger.Error(err.Error())
 		os.Exit(1)

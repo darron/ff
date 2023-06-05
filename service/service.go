@@ -42,7 +42,7 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
-func Get(conf *config.App) (*echo.Echo, error) {
+func Get(conf *config.App, templates string) (*echo.Echo, error) {
 	s := HTTPService{}
 
 	s.conf = conf
@@ -58,7 +58,7 @@ func Get(conf *config.App) (*echo.Echo, error) {
 	e.Static("/", "public")
 
 	// Let's setup the templates.
-	t, err := GetTemplates("views/*.html")
+	t, err := GetTemplates(templates)
 	if err != nil {
 		return nil, err
 	}
