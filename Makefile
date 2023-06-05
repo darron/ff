@@ -44,17 +44,19 @@ unit: ## Run unit tests.
 lint: ## See https://github.com/golangci/golangci-lint#install for install instructions
 	golangci-lint run ./...
 
-deploy: clean
+deploy-binary:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build $(BUILD_COMMAND)
 	scp bin/ff root@$(DO_BOX):/root/ff
+
+deploy: clean deploy-binary
 	scp views/* root@$(DO_BOX):/root/views/
 	scp -rp public/* root@$(DO_BOX):/root/public/
 	scp import.csv root@$(DO_BOX):/root/import.csv
-	scp tls_cache/* root@$(DO_BOX):/root/tls_cache/
-	scp setup.sh root@$(DO_BOX):/root/setup.sh
+	scp deploy/tls_cache/* root@$(DO_BOX):/root/tls_cache/
+	scp deploy/setup.sh root@$(DO_BOX):/root/setup.sh
 
 grab-files:
-	scp root@$(DO_BOX):/root/tls_cache/* tls_cache/
-	scp root@$(DO_BOX):/root/setup.sh setup.sh
+	scp root@$(DO_BOX):/root/tls_cache/* deploy/tls_cache/
+	scp root@$(DO_BOX):/root/setup.sh deploy/setup.sh
 
 .PHONY: help all deps clean build gzip release unit lint docker docker-curl

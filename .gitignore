@@ -2,5 +2,4 @@ bin/ff
 .vscode
 dump.rdb
 .envrc
-tls_cache
-setup.sh
+deploy
