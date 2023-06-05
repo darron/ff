@@ -56,9 +56,6 @@
 - [x] Add groups by Province and City?
 - [x] Be able to disabled caching by flag.
 - [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
-- [ ] Add Feature Flag Interface - use in-memory / augmented by written file - https://openfeature.dev/ - https://github.com/open-feature/flagd
-- [ ] Better Groups/Tags interface.
-- [ ] Make it actually be organized/designed?
 - [ ] Postgres/SQLite Implementation of Record
 - [ ] Postgres/SQLite Implementation of NewsStory
 - [ ] skaffold + k8s files?
@@ -70,6 +67,9 @@
 - [ ] Integrate StatsCan homicide records.
 - [ ] Get CRUD working for Record
 - [ ] Get CRUD working for NewsStory
+- [ ] Add Feature Flag Interface - use in-memory / augmented by written file - https://openfeature.dev/ - https://github.com/open-feature/flagd
+- [ ] Better Groups/Tags interface.
+- [ ] Make it actually be organized/designed?
 - [ ] Add Search?
 - [ ] https://echo.labstack.com/cookbook/graceful-shutdown/
 - [ ] Might need to do some more performance tuning once we have more traffic.
