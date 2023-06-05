@@ -229,6 +229,91 @@ func TestGetGroup(t *testing.T) {
 	assert.Error(t, err)
 }
 
+func TestProvince200(t *testing.T) {
+	s := HTTPService{}
+	m := mockRecordRepository{}
+	conf, _ := config.Get()
+	s.conf = conf
+	s.conf.RecordRepository = m
+	e := echo.New()
+	tp, err := GetTemplates("../views/*.html")
+	assert.NoError(t, err)
+	e.Renderer = tp
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/records/provinces/:province")
+	c.SetParamNames("province")
+	c.SetParamValues("AB")
+	if assert.NoError(t, s.Province(c)) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Contains(t, rec.Body.String(), "OIC Impact")
+	}
+}
+
+func TestProvince400(t *testing.T) {
+	s := HTTPService{}
+	m := mockRecordRepository{}
+	conf, _ := config.Get()
+	s.conf = conf
+	s.conf.RecordRepository = m
+	e := echo.New()
+	tp, err := GetTemplates("../views/*.html")
+	assert.NoError(t, err)
+	e.Renderer = tp
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/records/provinces/:province")
+	c.SetParamNames("province")
+	c.SetParamValues("")
+	if assert.NoError(t, s.Province(c)) {
+		assert.Equal(t, http.StatusBadRequest, rec.Code)
+	}
+}
+
+func TestProvince404(t *testing.T) {
+	s := HTTPService{}
+	m := mockRecordRepository{}
+	conf, _ := config.Get()
+	s.conf = conf
+	s.conf.RecordRepository = m
+	e := echo.New()
+	tp, err := GetTemplates("../views/*.html")
+	assert.NoError(t, err)
+	e.Renderer = tp
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/records/provinces/:province")
+	c.SetParamNames("province")
+	c.SetParamValues("AA")
+	if assert.NoError(t, s.Province(c)) {
+		assert.Equal(t, http.StatusNotFound, rec.Code)
+	}
+}
+
+func TestProvince500(t *testing.T) {
+	s := HTTPService{}
+	m := mockRecordRepositoryError{}
+	conf, _ := config.Get()
+	s.conf = conf
+	s.conf.RecordRepository = m
+	e := echo.New()
+	tp, err := GetTemplates("../views/*.html")
+	assert.NoError(t, err)
+	e.Renderer = tp
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/records/provinces/:province")
+	c.SetParamNames("province")
+	c.SetParamValues("AA")
+	if assert.NoError(t, s.Province(c)) {
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+	}
+}
+
 func TestContains(t *testing.T) {
 	haystack := []string{"one", "two", "three", "four", "five"}
 	needles := []string{"one", "two", "three", "four"}

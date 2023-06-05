@@ -71,6 +71,7 @@
 - [ ] Get CRUD working for Record
 - [ ] Get CRUD working for NewsStory
 - [ ] Add Search?
+- [ ] https://echo.labstack.com/cookbook/graceful-shutdown/
 - [ ] Might need to do some more performance tuning once we have more traffic.
 - [ ] Integrate News Stories with Web downloading.
 - [ ] Integrate News Stories with AI Summaries.

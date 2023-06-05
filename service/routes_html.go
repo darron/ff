@@ -59,7 +59,7 @@ func (s HTTPService) IndividualRecord(c echo.Context) error {
 func (s HTTPService) Province(c echo.Context) error {
 	province := c.Param("province")
 	if province == "" {
-		return c.String(http.StatusNotFound, "province must not be blank")
+		return c.String(http.StatusBadRequest, "province must not be blank")
 	}
 	records, err := s.conf.RecordRepository.GetAll()
 	if err != nil {
@@ -68,7 +68,7 @@ func (s HTTPService) Province(c echo.Context) error {
 	// Let's get the subset
 	newRecords, err := GetProvince(province, records)
 	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
+		return c.String(http.StatusNotFound, err.Error())
 	}
 	return c.Render(http.StatusOK, "records", newRecords)
 }
