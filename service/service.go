@@ -75,7 +75,10 @@ func Get(conf *config.App, templates string) (*echo.Echo, error) {
 	// those endpoints are effectively locked by default.
 	j := e.Group(APIPath)
 	if s.conf.JWTSecret != "" {
-		j.Use(echojwt.JWT([]byte(s.conf.JWTSecret)))
+		j.Use(echojwt.WithConfig(echojwt.Config{
+			SigningKey:   []byte(s.conf.JWTSecret),
+			ErrorHandler: JWTErrorHandler,
+		}))
 	}
 
 	// Let's setup the in memory cache as middleware.
@@ -121,6 +124,10 @@ func Get(conf *config.App, templates string) (*echo.Echo, error) {
 	j.POST(NewsStoriesAPIPath, s.CreateNewsStory)
 
 	return e, nil
+}
+
+func JWTErrorHandler(c echo.Context, err error) error {
+	return echo.ErrUnauthorized
 }
 
 func nullbool(n null.Bool) string {
