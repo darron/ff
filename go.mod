@@ -8,6 +8,7 @@ require (
 	github.com/carlmjohnson/versioninfo v0.22.4
 	github.com/go-faker/faker/v4 v4.1.0
 	github.com/gojek/heimdall/v7 v7.0.2
+	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/google/uuid v1.3.0
 	github.com/labstack/echo-contrib v0.15.0
 	github.com/labstack/echo-jwt/v4 v4.2.0
@@ -39,7 +40,6 @@ require (
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/gojek/valkyrie v0.0.0-20180215180059-6aee720afcdf // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
-	github.com/golang-jwt/jwt/v5 v5.0.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/pprof v0.0.0-20230207041349-798e818bf904 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
