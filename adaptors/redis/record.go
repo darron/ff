@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"encoding/json"
+	"strings"
 
 	"github.com/darron/ff/core"
 	"github.com/google/uuid"
@@ -35,6 +36,9 @@ func (rr RecordRepository) Find(id string) (*core.Record, error) {
 }
 
 func (rr RecordRepository) find(ctx context.Context, id string, client rueidis.Client) (*core.Record, error) {
+	if !strings.HasPrefix(id, recordPrefix) {
+		id = recordPrefix + id
+	}
 	r := core.Record{}
 	response, err := client.Do(ctx, client.B().Get().Key(id).Build()).ToString()
 	if err != nil {
@@ -62,7 +66,7 @@ func (rr RecordRepository) find(ctx context.Context, id string, client rueidis.C
 }
 
 func (rr RecordRepository) Store(r *core.Record) (string, error) {
-	redisKey := "record-" + uuid.NewString()
+	redisKey := recordPrefix + uuid.NewString()
 	r.ID = redisKey
 	ctx, cancel := context.WithTimeout(context.Background(), redisTimeout)
 	defer cancel()
