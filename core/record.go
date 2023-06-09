@@ -18,23 +18,23 @@ type RecordService interface {
 }
 
 type Record struct {
-	ID               string      `json:"id" faker:"-"`
-	Date             string      `json:"date,omitempty" faker:"date"`
-	Name             string      `json:"name,omitempty" faker:"first_name_male"`
-	City             string      `json:"city,omitempty" faker:"oneof: Calgary, Montreal, Vancouver, Toronto"`
-	Province         string      `json:"province,omitempty" faker:"oneof: AB, QC, BC, ON"`
-	Licensed         null.Bool   `json:"licensed,omitempty" faker:"nullbool"`
-	Victims          int         `json:"victims,omitempty" faker:"boundary_start=2, boundary_end=10"`
-	Deaths           int         `json:"deaths,omitempty" faker:"boundary_start=2, boundary_end=10"`
-	Injuries         int         `json:"injuries,omitempty" faker:"boundary_start=2, boundary_end=10"`
-	Suicide          null.Bool   `json:"suicide,omitempty" faker:"nullbool"`
-	DevicesUsed      string      `json:"devicesused,omitempty" faker:"oneof: Gun, Knife, Pipe, Hands, Axe"`
-	Firearms         null.Bool   `json:"firearms,omitempty" faker:"nullbool"`
-	PossessedLegally null.Bool   `json:"possessedlegally,omitempty" faker:"-"`
-	Warnings         string      `json:"warnings,omitempty" faker:"sentence"`
-	OICImpact        null.Bool   `json:"oicimpact,omitempty" faker:"nullbool"`
-	AISummary        string      `json:"aisummary,omitempty" faker:"paragraph"`
-	NewsStories      []NewsStory `json:"news_stories,omitempty"`
+	ID               string      `json:"id" faker:"-" sql:"id"`
+	Date             string      `json:"date,omitempty" faker:"date" sql:"date"`
+	Name             string      `json:"name,omitempty" faker:"first_name_male" sql:"name"`
+	City             string      `json:"city,omitempty" faker:"oneof: Calgary, Montreal, Vancouver, Toronto" sql:"city"`
+	Province         string      `json:"province,omitempty" faker:"oneof: AB, QC, BC, ON" sql:"province"`
+	Licensed         null.Bool   `json:"licensed,omitempty" faker:"nullbool" sql:"licensed"`
+	Victims          int         `json:"victims,omitempty" faker:"boundary_start=2, boundary_end=10" sql:"victims"`
+	Deaths           int         `json:"deaths,omitempty" faker:"boundary_start=2, boundary_end=10" sql:"deaths"`
+	Injuries         int         `json:"injuries,omitempty" faker:"boundary_start=2, boundary_end=10" sql:"injuries"`
+	Suicide          null.Bool   `json:"suicide,omitempty" faker:"nullbool" sql:"suicide"`
+	DevicesUsed      string      `json:"devicesused,omitempty" faker:"oneof: Gun, Knife, Pipe, Hands, Axe" sql:"devices_used"`
+	Firearms         null.Bool   `json:"firearms,omitempty" faker:"nullbool" sql:"firearms"`
+	PossessedLegally null.Bool   `json:"possessedlegally,omitempty" faker:"-" sql:"possessed_legally"`
+	Warnings         string      `json:"warnings,omitempty" faker:"sentence" sql:"warnings"`
+	OICImpact        null.Bool   `json:"oicimpact,omitempty" faker:"nullbool" sql:"oic_impact"`
+	AISummary        string      `json:"aisummary,omitempty" faker:"paragraph" sql:"ai_summary"`
+	NewsStories      []NewsStory `json:"news_stories,omitempty" sql:"-"`
 }
 
 func UnmarshalJSONRecord(j string) (Record, error) {
