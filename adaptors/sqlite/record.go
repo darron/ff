@@ -3,6 +3,7 @@ package sqlite
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/darron/ff/core"
 	"github.com/google/uuid"
@@ -70,10 +71,14 @@ func (rr RecordRepository) Store(record *core.Record) (string, error) {
 		return "", fmt.Errorf("Store/client.Begin Error: %w", err)
 	}
 
+	// Let's adjust the date so that it stores correctly
+	layout := "2006"
+	t, _ := time.Parse(layout, record.Date)
+
 	// Insert the Record
 	recordQuery := "INSERT INTO records (id, date, name, city, province, licensed, victims, deaths, injuries, suicide, devices_used, firearms, possessed_legally, warnings, oic_impact, ai_summary) " +
 		"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	_, err = tx.Exec(recordQuery, id, record.Date, record.Name, record.City, record.Province, record.Licensed, record.Victims, record.Deaths, record.Injuries, record.Suicide, record.DevicesUsed, record.Firearms, record.PossessedLegally, record.Warnings, record.OICImpact, record.AISummary)
+	_, err = tx.Exec(recordQuery, id, t, record.Name, record.City, record.Province, record.Licensed, record.Victims, record.Deaths, record.Injuries, record.Suicide, record.DevicesUsed, record.Firearms, record.PossessedLegally, record.Warnings, record.OICImpact, record.AISummary)
 	if err != nil {
 		tx.Rollback() //nolint
 		return "", fmt.Errorf("Store/Record/tx.Exec Error: %w", err)
