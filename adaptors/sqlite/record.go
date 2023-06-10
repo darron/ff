@@ -47,6 +47,14 @@ func (rr RecordRepository) find(ctx context.Context, id string, client *sqlx.DB)
 	if err != nil {
 		return &r, fmt.Errorf("find/Get Error: %w", err)
 	}
+
+	// Fix the date on output - it's stored in the SQL DB more precisely than I want.
+	t, err := time.Parse(time.RFC3339, r.Date)
+	if err != nil {
+		return &r, fmt.Errorf("find/time.Parse Error: %w", err)
+	}
+	r.Date = t.Format(dateLayout)
+
 	err = client.Select(&ns, "SELECT * from news_stories WHERE record_id = ?", id)
 	if err != nil {
 		return &r, fmt.Errorf("find/Select Error: %w", err)
@@ -72,8 +80,10 @@ func (rr RecordRepository) Store(record *core.Record) (string, error) {
 	}
 
 	// Let's adjust the date so that it stores correctly
-	layout := "2006"
-	t, _ := time.Parse(layout, record.Date)
+	t, err := time.Parse(dateLayout, record.Date)
+	if err != nil {
+		return "", fmt.Errorf("Store/time.Parse Error: %w", err)
+	}
 
 	// Insert the Record
 	recordQuery := "INSERT INTO records (id, date, name, city, province, licensed, victims, deaths, injuries, suicide, devices_used, firearms, possessed_legally, warnings, oic_impact, ai_summary) " +
