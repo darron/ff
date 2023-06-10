@@ -34,15 +34,23 @@ func (rr RecordRepository) Find(id string) (*core.Record, error) {
 
 func (rr RecordRepository) find(ctx context.Context, id string, client *sqlx.DB) (*core.Record, error) {
 	r := core.Record{}
+	ns := []core.NewsStory{}
+
 	recordQuery := `
 		SELECT r.id, r.date, r.name, r.city, r.province, r.licensed, r.victims, r.deaths, r.injuries, r.suicide, r.devices_used, r.firearms,
 		r.possessed_legally, r.warnings, r.oic_impact, r.ai_summary
 		FROM records r
-		LEFT JOIN news_stories n ON r.id = n.record_id
-		WHERE r.id = ?
-	`
+		WHERE r.id = ?`
+
 	err := client.Get(&r, recordQuery, id)
-	fmt.Printf("Record: %#v\n Error: %s", r, err)
+	if err != nil {
+		return &r, fmt.Errorf("find/Get Error: %w", err)
+	}
+	err = client.Select(&ns, "SELECT * from news_stories WHERE record_id = ?", id)
+	if err != nil {
+		return &r, fmt.Errorf("find/Select Error: %w", err)
+	}
+	r.NewsStories = ns
 	return &r, err
 }
 

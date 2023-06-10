@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/go-faker/faker/v4"
+	"gopkg.in/guregu/null.v4"
 )
 
 type NewsStoryService interface {
@@ -12,11 +13,11 @@ type NewsStoryService interface {
 }
 
 type NewsStory struct {
-	ID        string `json:"id" faker:"-" db:"id"`
-	RecordID  string `json:"record_id,omitempty" faker:"uuid_hyphenated" db:"record_id"`
-	URL       string `json:"url,omitempty" faker:"url" db:"url"`
-	BodyText  string `json:"body_text,omitempty" faker:"paragraph" db:"body_text"`
-	AISummary string `json:"ai_summary,omitempty" faker:"sentence" db:"ai_summary"`
+	ID        string      `json:"id" faker:"-" db:"id"`
+	RecordID  string      `json:"record_id,omitempty" faker:"uuid_hyphenated" db:"record_id"`
+	URL       string      `json:"url,omitempty" faker:"url" db:"url"`
+	BodyText  null.String `json:"body_text,omitempty" faker:"paragraph" db:"body_text"`
+	AISummary null.String `json:"ai_summary,omitempty" faker:"sentence" db:"ai_summary"`
 }
 
 func UnmarshalJSONNewsStory(j string) (NewsStory, error) {
