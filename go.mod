@@ -13,6 +13,7 @@ require (
 	github.com/labstack/echo-contrib v0.15.0
 	github.com/labstack/echo-jwt/v4 v4.2.0
 	github.com/labstack/echo/v4 v4.10.2
+	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/redis/rueidis v1.0.4
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.3

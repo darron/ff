@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/csv"
 	"encoding/json"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -21,7 +22,7 @@ import (
 
 func init() {
 	rootCmd.AddCommand(importCmd)
-	importCmd.Flags().StringVarP(&importFilename, "import", "i", defaultImportFilename, "Filename to import")
+	importCmd.Flags().StringVarP(&importFilename, "import", "i", GetENVVariable("IMPORT_FILENAME", defaultImportFilename), "Filename to import")
 }
 
 var (
@@ -120,6 +121,11 @@ func doImport(conf *config.App) error {
 			return err
 		}
 		defer res.Body.Close()
+		body, err := io.ReadAll(res.Body)
+		if err != nil {
+			return err
+		}
+		conf.Logger.Info(string(body))
 	}
 	return nil
 }
