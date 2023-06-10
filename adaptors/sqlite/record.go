@@ -94,22 +94,25 @@ func (rr RecordRepository) Store(record *core.Record) (string, error) {
 		return "", fmt.Errorf("Store/Record/tx.Exec Error: %w", err)
 	}
 
-	// Insert the NewsStories
-	for _, newsStory := range record.NewsStories {
-		storyID := uuid.NewString()
-		newsStoryQuery := "INSERT INTO news_stories (id, record_id, url) VALUES (?, ?, ?)"
-		_, err = tx.Exec(newsStoryQuery, storyID, id, newsStory.URL)
-		if err != nil {
-			tx.Rollback() //nolint
-			return "", fmt.Errorf("Store/NewsStories/tx.Exec Error: %w", err)
-		}
-	}
-
 	// Commit the transaction
 	err = tx.Commit()
 	if err != nil {
 		tx.Rollback() //nolint
 		return "", fmt.Errorf("Store/tx.Commit Error: %w", err)
+	}
+
+	// Insert the NewsStories
+	nsr := NewsStoryRepository{} // Don't really like this.
+	ctx, cancel := context.WithTimeout(context.Background(), sqliteTimeout)
+	defer cancel()
+	for _, newsStory := range record.NewsStories {
+		storyID := uuid.NewString()
+		newsStory.ID = storyID
+		newsStory.RecordID = id
+		_, err := nsr.store(ctx, &newsStory, client)
+		if err != nil {
+			return "", fmt.Errorf("Store/newsStory/store Error: %w", err)
+		}
 	}
 
 	return id, err

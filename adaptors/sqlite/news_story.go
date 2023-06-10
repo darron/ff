@@ -2,59 +2,83 @@ package sqlite
 
 import (
 	"context"
-	"database/sql"
+	"fmt"
 
 	"github.com/darron/ff/core"
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type NewsStoryRepository struct {
 	Filename string
 }
 
-func (nsr NewsStoryRepository) Connect(filename string) (*sql.DB, error) {
-	conn, err := sql.Open("sqlite3_extended", filename)
+func (nsr NewsStoryRepository) Connect(filename string) (*sqlx.DB, error) {
+	conn, err := sqlx.Open("sqlite3", filename)
 	return conn, err
 }
 
 func (nsr NewsStoryRepository) Find(id string) (*core.NewsStory, error) {
-	r := core.NewsStory{}
+	ns := core.NewsStory{}
 	ctx, cancel := context.WithTimeout(context.Background(), sqliteTimeout)
 	defer cancel()
 	client, err := nsr.Connect(nsr.Filename)
 	if err != nil {
-		return &r, err
+		return &ns, fmt.Errorf("Find/Connect Error: %w", err)
 	}
 	defer client.Close()
 	return nsr.find(ctx, id, client)
 }
 
-func (nsr NewsStoryRepository) find(ctx context.Context, id string, client *sql.DB) (*core.NewsStory, error) {
-	r := core.NewsStory{}
-	// TODO: Get all related news stories.
-	// TODO: Deal with rows
-	_, err := client.Query("SELECT * from news_stories WHERE record_id = ?", id)
+func (nsr NewsStoryRepository) find(ctx context.Context, id string, client *sqlx.DB) (*core.NewsStory, error) {
+	ns := core.NewsStory{}
+	err := client.Get(&ns, "SELECT * from news_stories WHERE id = ?", id)
 	if err != nil {
-		return &r, err
+		return &ns, fmt.Errorf("find/Get Error: %w", err)
 	}
-	return &r, err
+	return &ns, err
 }
 
-func (nsr NewsStoryRepository) Store(r *core.NewsStory) (string, error) {
-	id := uuid.NewString()
-	// TODO: When we do the query - we'll use this.
-	// ctx, cancel := context.WithTimeout(context.Background(), sqliteTimeout)
-	// defer cancel()
+func (nsr NewsStoryRepository) Store(ns *core.NewsStory) (string, error) {
+	if ns.ID == "" {
+		ns.ID = uuid.NewString()
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), sqliteTimeout)
+	defer cancel()
 	client, err := nsr.Connect(nsr.Filename)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Store/Connect Error: %w", err)
 	}
 	defer client.Close()
 
-	// TODO:
-	_, err = client.Query("INSERT into news_story = ?", r)
+	return nsr.store(ctx, ns, client)
+}
 
-	return id, err
+func (nsr NewsStoryRepository) store(ctx context.Context, ns *core.NewsStory, client *sqlx.DB) (string, error) {
+	// Start the transaction.
+	tx, err := client.Begin()
+	if err != nil {
+		return "", fmt.Errorf("store/client.Begin Error: %w", err)
+	}
+
+	// Insert the NewsStory
+	newsStoryQuery := "INSERT INTO news_stories (id, record_id, url, body_text, ai_summary) VALUES (?, ?, ?, ?, ?)"
+	_, err = tx.Exec(newsStoryQuery, ns.ID, ns.RecordID, ns.URL, ns.BodyText, ns.AISummary)
+	if err != nil {
+		tx.Rollback() //nolint
+		return "", fmt.Errorf("store/NewsStories/tx.Exec Error: %w", err)
+	}
+
+	// Commit the transaction
+	err = tx.Commit()
+	if err != nil {
+		tx.Rollback() //nolint
+		return "", fmt.Errorf("store/tx.Commit Error: %w", err)
+	}
+
+	return ns.ID, err
 }
 
 func (nsr NewsStoryRepository) GetAll() ([]*core.NewsStory, error) {
@@ -62,15 +86,13 @@ func (nsr NewsStoryRepository) GetAll() ([]*core.NewsStory, error) {
 
 	client, err := nsr.Connect(nsr.Filename)
 	if err != nil {
-		return stories, err
+		return stories, fmt.Errorf("GetAll/Connect Error: %w", err)
 	}
 	defer client.Close()
 
-	// TODO: Do a select with a join as well.
-	// TODO: Then deal with all the rows.
-	_, err = client.Query("SELECT * from news_stories")
+	err = client.Select(&stories, "SELECT * from news_stories")
 	if err != nil {
-		return stories, err
+		return stories, fmt.Errorf("GetAll/Select Error: %w", err)
 	}
 
 	return stories, nil
