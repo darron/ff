@@ -12,11 +12,11 @@ type NewsStoryService interface {
 }
 
 type NewsStory struct {
-	ID        string `json:"id" faker:"-" sql:"id"`
-	RecordID  string `json:"record_id,omitempty" faker:"uuid_hyphenated" sql:"record_id"`
-	URL       string `json:"url,omitempty" faker:"url" sql:"url"`
-	BodyText  string `json:"body_text,omitempty" faker:"paragraph" sql:"body_text"`
-	AISummary string `json:"ai_summary,omitempty" faker:"sentence" sql:"ai_summary"`
+	ID        string `json:"id" faker:"-" db:"id"`
+	RecordID  string `json:"record_id,omitempty" faker:"uuid_hyphenated" db:"record_id"`
+	URL       string `json:"url,omitempty" faker:"url" db:"url"`
+	BodyText  string `json:"body_text,omitempty" faker:"paragraph" db:"body_text"`
+	AISummary string `json:"ai_summary,omitempty" faker:"sentence" db:"ai_summary"`
 }
 
 func UnmarshalJSONNewsStory(j string) (NewsStory, error) {

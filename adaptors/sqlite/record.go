@@ -36,13 +36,13 @@ func (rr RecordRepository) find(ctx context.Context, id string, client *sqlx.DB)
 	r := core.Record{}
 	recordQuery := `
 		SELECT r.id, r.date, r.name, r.city, r.province, r.licensed, r.victims, r.deaths, r.injuries, r.suicide, r.devices_used, r.firearms,
-		r.possessed_legally, r.warnings, r.oic_impact, r.ai_summary, n.id, n.record_id, n.url
+		r.possessed_legally, r.warnings, r.oic_impact, r.ai_summary
 		FROM records r
 		LEFT JOIN news_stories n ON r.id = n.record_id
 		WHERE r.id = ?
 	`
-	err := client.Select(&r, recordQuery, id)
-	fmt.Printf("Record: %#v\n", r)
+	err := client.Get(&r, recordQuery, id)
+	fmt.Printf("Record: %#v\n Error: %s", r, err)
 	return &r, err
 }
 
