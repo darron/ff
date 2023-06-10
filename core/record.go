@@ -34,7 +34,7 @@ type Record struct {
 	Warnings         string      `json:"warnings,omitempty" faker:"sentence" db:"warnings"`
 	OICImpact        null.Bool   `json:"oic_impact,omitempty" faker:"nullbool" db:"oic_impact"`
 	AISummary        string      `json:"ai_summary,omitempty" faker:"paragraph" db:"ai_summary"`
-	NewsStories      []NewsStory `json:"news_stories,omitempty" db:"-"`
+	NewsStories      []NewsStory `json:"news_stories,omitempty" db:"news_stories"`
 }
 
 func UnmarshalJSONRecord(j string) (Record, error) {

@@ -73,8 +73,9 @@ func (rr RecordRepository) Store(record *core.Record) (string, error) {
 
 	// Insert the NewsStories
 	for _, newsStory := range record.NewsStories {
-		newsStoryQuery := "INSERT INTO news_stories (record_id, url) VALUES (?, ?)"
-		_, err = tx.Exec(newsStoryQuery, id, newsStory.URL)
+		storyID := uuid.NewString()
+		newsStoryQuery := "INSERT INTO news_stories (id, record_id, url) VALUES (?, ?, ?)"
+		_, err = tx.Exec(newsStoryQuery, storyID, id, newsStory.URL)
 		if err != nil {
 			tx.Rollback() //nolint
 			return "", err

@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS records (
 );
 
 CREATE TABLE IF NOT EXISTS news_stories (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
     record_id VARCHAR(36) NOT NULL,
     [url] TEXT,
     body_text TEXT,
