@@ -26,7 +26,7 @@ func (rr RecordRepository) Find(id string) (*core.Record, error) {
 	defer cancel()
 	client, err := rr.Connect(rr.Filename)
 	if err != nil {
-		return &r, err
+		return &r, fmt.Errorf("Find/Connect Error: %w", err)
 	}
 	defer client.Close()
 	return rr.find(ctx, id, client)
@@ -60,14 +60,14 @@ func (rr RecordRepository) Store(record *core.Record) (string, error) {
 	// Connect to the db.
 	client, err := rr.Connect(rr.Filename)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Store/Connect Error: %w", err)
 	}
 	defer client.Close()
 
 	// Start the transaction.
 	tx, err := client.Begin()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Store/client.Begin Error: %w", err)
 	}
 
 	// Insert the Record
@@ -76,7 +76,7 @@ func (rr RecordRepository) Store(record *core.Record) (string, error) {
 	_, err = tx.Exec(recordQuery, id, record.Date, record.Name, record.City, record.Province, record.Licensed, record.Victims, record.Deaths, record.Injuries, record.Suicide, record.DevicesUsed, record.Firearms, record.PossessedLegally, record.Warnings, record.OICImpact, record.AISummary)
 	if err != nil {
 		tx.Rollback() //nolint
-		return "", err
+		return "", fmt.Errorf("Store/Record/tx.Exec Error: %w", err)
 	}
 
 	// Insert the NewsStories
@@ -86,7 +86,7 @@ func (rr RecordRepository) Store(record *core.Record) (string, error) {
 		_, err = tx.Exec(newsStoryQuery, storyID, id, newsStory.URL)
 		if err != nil {
 			tx.Rollback() //nolint
-			return "", err
+			return "", fmt.Errorf("Store/NewsStories/tx.Exec Error: %w", err)
 		}
 	}
 
@@ -94,26 +94,38 @@ func (rr RecordRepository) Store(record *core.Record) (string, error) {
 	err = tx.Commit()
 	if err != nil {
 		tx.Rollback() //nolint
-		return "", err
+		return "", fmt.Errorf("Store/tx.Commit Error: %w", err)
 	}
 
 	return id, err
 }
 
 func (rr RecordRepository) GetAll() ([]*core.Record, error) {
+	var ids []string
 	var records []*core.Record
+
+	ctx, cancel := context.WithTimeout(context.Background(), sqliteTimeout)
+	defer cancel()
 
 	client, err := rr.Connect(rr.Filename)
 	if err != nil {
-		return records, err
+		return records, fmt.Errorf("GetAll/Connect Error: %w", err)
 	}
 	defer client.Close()
 
-	// TODO: Do a select with a join as well.
-	// TODO: Then deal with all the rows.
-	_, err = client.Query("SELECT * from records")
+	// Get all the IDs.
+	err = client.Select(&ids, "SELECT id from records")
 	if err != nil {
-		return records, err
+		return records, fmt.Errorf("GetAll/Select/RecordIDs Error: %w", err)
+	}
+
+	// Get all of those records with linked stories.
+	for _, id := range ids {
+		r, err := rr.find(ctx, id, client)
+		if err != nil {
+			return records, fmt.Errorf("GetAll/find/%s Error: %w", id, err)
+		}
+		records = append(records, r)
 	}
 
 	return records, nil
