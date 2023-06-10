@@ -2,10 +2,11 @@ package sqlite
 
 import (
 	"context"
-	"database/sql"
+	"fmt"
 
 	"github.com/darron/ff/core"
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -14,8 +15,8 @@ type RecordRepository struct {
 	Filename string
 }
 
-func (rr RecordRepository) Connect(filename string) (*sql.DB, error) {
-	conn, err := sql.Open("sqlite3", filename)
+func (rr RecordRepository) Connect(filename string) (*sqlx.DB, error) {
+	conn, err := sqlx.Open("sqlite3", filename)
 	return conn, err
 }
 
@@ -31,14 +32,17 @@ func (rr RecordRepository) Find(id string) (*core.Record, error) {
 	return rr.find(ctx, id, client)
 }
 
-func (rr RecordRepository) find(ctx context.Context, id string, client *sql.DB) (*core.Record, error) {
+func (rr RecordRepository) find(ctx context.Context, id string, client *sqlx.DB) (*core.Record, error) {
 	r := core.Record{}
-	// TODO: Get all related news stories.
-	// TODO: Deal with rows
-	_, err := client.Query("SELECT * from records WHERE ID = ?", id)
-	if err != nil {
-		return &r, err
-	}
+	recordQuery := `
+		SELECT r.id, r.date, r.name, r.city, r.province, r.licensed, r.victims, r.deaths, r.injuries, r.suicide, r.devices_used, r.firearms,
+		r.possessed_legally, r.warnings, r.oic_impact, r.ai_summary, n.id, n.record_id, n.url
+		FROM records r
+		LEFT JOIN news_stories n ON r.id = n.record_id
+		WHERE r.id = ?
+	`
+	err := client.Select(&r, recordQuery, id)
+	fmt.Printf("Record: %#v\n", r)
 	return &r, err
 }
 
