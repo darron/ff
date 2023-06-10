@@ -129,7 +129,7 @@ func (rr RecordRepository) GetAll() ([]*core.Record, error) {
 	defer client.Close()
 
 	// Get all the IDs.
-	err = client.Select(&ids, "SELECT id from records")
+	err = client.Select(&ids, "SELECT id from records ORDER BY date DESC")
 	if err != nil {
 		return records, fmt.Errorf("GetAll/Select/RecordIDs Error: %w", err)
 	}
