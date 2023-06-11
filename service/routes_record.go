@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/darron/ff/core"
@@ -32,7 +33,7 @@ func (s HTTPService) GetRecord(c echo.Context) error {
 	}
 	r, err := s.conf.RecordRepository.Find(id)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return c.JSON(http.StatusInternalServerError, fmt.Errorf("Find Error: %w", err))
 	}
 	if r.ID == "" {
 		return c.JSON(http.StatusNotFound, "that id does not exist")

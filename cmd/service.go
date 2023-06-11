@@ -27,8 +27,14 @@ var (
 		},
 	}
 
+	defaultStorageLayer = "redis"
+	storageLayer        string
+
 	defaultRedisConn = "127.0.0.1:6379"
 	redisConn        string
+
+	defaultSQLiteFile = "ff.db"
+	sqliteFile        string
 
 	jwtSecret string
 
@@ -41,6 +47,8 @@ var (
 
 func init() {
 	rootCmd.AddCommand(serviceCmd)
+	serviceCmd.Flags().StringVarP(&storageLayer, "storage", "", GetENVVariable("STORAGE", defaultStorageLayer), "Storage Layer: redis or sqlite")
+	serviceCmd.Flags().StringVarP(&sqliteFile, "sqlite", "", GetENVVariable("SQLITE", defaultSQLiteFile), "SQLite Filename")
 	serviceCmd.Flags().StringVarP(&redisConn, "redisConn", "r", GetENVVariable("REDIS", defaultRedisConn), "Redis connection string")
 	serviceCmd.Flags().StringVarP(&jwtSecret, "jwtSecret", "", GetENVVariable("JWT_SECRET", defaultJWTSecret()), "JWT Secret")
 	serviceCmd.Flags().BoolVarP(&profilingEnabled, "profiling", "", GetBoolENVVariable("PROFILING_ENABLED", defaultProfilingEnabled), "Enable Datadog tracing and profiling")
@@ -54,8 +62,15 @@ func StartService() {
 	opts = append(opts, config.WithLogger(logLevel, logFormat))
 	opts = append(opts, config.WithMiddlewareHTMLCache(middlewareHTMLCacheEnabled))
 
-	// Once we have another db option - we'll adjust this.
-	opts = append(opts, config.WithRedis(redisConn))
+	// Pick the storage layer and do the things.
+	switch storageLayer {
+	case "redis":
+		opts = append(opts, config.WithRedis(redisConn))
+	case "sqlite":
+		opts = append(opts, config.WithSQLite(sqliteFile))
+	default:
+		log.Fatal("Must pick supported storage layer.")
+	}
 
 	// Let's enable JWT if it's defined.
 	if jwtSecret != "" {

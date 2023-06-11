@@ -55,9 +55,12 @@
 - [x] Monitoring for uptime.
 - [x] Add groups by Province and City?
 - [x] Be able to disabled caching by flag.
+- [x] SQLite Implementation of Record
+- [x] SQLite Implementation of NewsStory
+- [ ] SQLite stream to storage?
 - [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
-- [ ] Postgres/SQLite Implementation of Record
-- [ ] Postgres/SQLite Implementation of NewsStory
+- [ ] Postgres Implementation of Record
+- [ ] Postgres Implementation of NewsStory
 - [ ] skaffold + k8s files?
 - [ ] Do I need to add some contexts to track requests?
 - [ ] Add /healthz which tests for health of DB?

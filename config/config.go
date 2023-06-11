@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/darron/ff/adaptors/redis"
+	"github.com/darron/ff/adaptors/sqlite"
 	"github.com/darron/ff/core"
 	"golang.org/x/exp/slog"
 )
@@ -54,6 +55,13 @@ func WithRedis(conn string) OptFunc {
 	return func(opts *Opts) {
 		opts.RecordRepository = redis.RecordRepository{Conn: conn}
 		opts.NewsStoryRepository = redis.NewsStoryRepository{Conn: conn}
+	}
+}
+
+func WithSQLite(file string) OptFunc {
+	return func(opts *Opts) {
+		opts.RecordRepository = sqlite.RecordRepository{Filename: file}
+		opts.NewsStoryRepository = sqlite.NewsStoryRepository{Filename: file}
 	}
 }
 

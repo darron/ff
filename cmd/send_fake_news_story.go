@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -50,5 +51,10 @@ func sendFakeNewsStory(conf *config.App) error {
 		return err
 	}
 	defer res.Body.Close()
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return err
+	}
+	conf.Logger.Info(string(body))
 	return nil
 }
