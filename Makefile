@@ -23,13 +23,16 @@ clean: ## Remove compiled binaries.
 docker: ## Build Docker image
 	docker buildx build . --platform linux/amd64,linux/arm64 -t $(CONTAINER_NAME):$(GIT_SHA) --push
 
-build: clean
+migrations:
+	pushd config/migrations && go generate && popd
+
+build: clean migrations
 	go build $(BUILD_COMMAND)
 
-rebuild: clean ## Force rebuild of all packages.
+rebuild: clean migrations ## Force rebuild of all packages.
 	go build -a $(BUILD_COMMAND)
 
-linux: clean ## Cross compile for linux.
+linux: clean migrations ## Cross compile for linux.
 	CGO_ENABLED=0 GOOS=linux go build $(BUILD_COMMAND)
 
 gzip: ## Compress current compiled binary.
@@ -44,7 +47,7 @@ unit: ## Run unit tests.
 lint: ## See https://github.com/golangci/golangci-lint#install for install instructions
 	golangci-lint run ./...
 
-deploy-binary:
+deploy-binary: clean migrations
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build $(BUILD_COMMAND)
 	scp bin/ff root@$(DO_BOX):/root/ff
 

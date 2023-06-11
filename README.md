@@ -58,7 +58,8 @@
 - [x] SQLite Implementation of Record
 - [x] SQLite Implementation of NewsStory
 - [x] SQLite file creation if it doesn't exist.
-- [ ] SQLite file migration if it isn't already done.
+- [x] SQLite file migration if it isn't already done.
+- [ ] Cross compile for Linux w/SQLite3?
 - [ ] SQLite stream to storage?
 - [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
 - [ ] Postgres Implementation of Record

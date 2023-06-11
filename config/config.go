@@ -10,9 +10,14 @@ import (
 
 	"github.com/darron/ff/adaptors/redis"
 	"github.com/darron/ff/adaptors/sqlite"
+	"github.com/darron/ff/config/migrations"
 	"github.com/darron/ff/core"
 	"github.com/jmoiron/sqlx"
 	"golang.org/x/exp/slog"
+
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/sqlite3"
+	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
 )
 
 type OptFunc func(*Opts)
@@ -68,7 +73,11 @@ func WithSQLite(file string) OptFunc {
 		if err != nil {
 			log.Fatal(err)
 		}
-		// TODO: If you've created it - migrate it.
+		// If you've created it - migrate it.
+		err = migrateSQLite3Database(file)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 	return func(opts *Opts) {
 		opts.RecordRepository = sqlite.RecordRepository{Filename: file}
@@ -209,5 +218,27 @@ func createSQLite3Database(file string) error {
 		return err
 	}
 	db.Close()
+	return nil
+}
+
+func migrateSQLite3Database(file string) error {
+	log.Println("Migrating SQLite3 db.")
+	s := bindata.Resource(migrations.AssetNames(),
+		func(name string) ([]byte, error) {
+			return migrations.Asset(name)
+		})
+
+	d, err := bindata.WithInstance(s)
+	if err != nil {
+		return err
+	}
+	m, err := migrate.NewWithSourceInstance("go-bindata", d, "sqlite3://"+file)
+	if err != nil {
+		return err
+	}
+	err = m.Up()
+	if err != nil {
+		return err
+	}
 	return nil
 }
