@@ -35,8 +35,10 @@ rebuild: clean migrations ## Force rebuild of all packages.
 linux: clean migrations ## Cross compile for linux.
 	CGO_ENABLED=0 GOOS=linux go build $(BUILD_COMMAND)
 
+# SQLite3 makes this required: brew install FiloSottile/musl-cross/musl-cross
+# See: https://github.com/mattn/go-sqlite3#cross-compile
 linux-amd64: clean migrations
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build $(BUILD_COMMAND)
+	CC=x86_64-linux-musl-gcc CXX=x86_64-linux-musl-g++ CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -ldflags "-linkmode external -extldflags -static" $(BUILD_COMMAND)
 
 gzip: ## Compress current compiled binary.
 	gzip bin/$(BINARY_NAME)
