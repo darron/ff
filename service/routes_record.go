@@ -44,10 +44,12 @@ func (s HTTPService) GetRecord(c echo.Context) error {
 func (s HTTPService) CreateRecord(c echo.Context) error {
 	r := &core.Record{}
 	if err := c.Bind(r); err != nil {
+		s.conf.Logger.Error("Bind", "error", err)
 		return c.JSON(http.StatusBadRequest, err)
 	}
 	id, err := s.conf.RecordRepository.Store(r)
 	if err != nil {
+		s.conf.Logger.Error("Store", "error", err)
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 	return c.JSON(http.StatusCreated, id)

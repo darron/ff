@@ -19,7 +19,7 @@ type RecordService interface {
 
 type Record struct {
 	ID               string      `json:"id" faker:"-" db:"id"`
-	Date             string      `json:"date,omitempty" faker:"date" db:"date"`
+	Date             string      `json:"date,omitempty" faker:"year" db:"date"`
 	Name             string      `json:"name,omitempty" faker:"first_name_male" db:"name"`
 	City             string      `json:"city,omitempty" faker:"oneof: Calgary, Montreal, Vancouver, Toronto" db:"city"`
 	Province         string      `json:"province,omitempty" faker:"oneof: AB, QC, BC, ON" db:"province"`
