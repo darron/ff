@@ -55,8 +55,8 @@
 - [x] Monitoring for uptime.
 - [x] Add groups by Province and City?
 - [x] Be able to disabled caching by flag.
-- [ ] SQLite Implementation of Record
-- [ ] SQLite Implementation of NewsStory
+- [x] SQLite Implementation of Record
+- [x] SQLite Implementation of NewsStory
 - [ ] SQLite stream to storage?
 - [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
 - [ ] Postgres Implementation of Record
