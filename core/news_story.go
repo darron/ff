@@ -16,8 +16,8 @@ type NewsStory struct {
 	ID        string      `json:"id" faker:"-" db:"id"`
 	RecordID  string      `json:"record_id,omitempty" faker:"uuid_hyphenated" db:"record_id"`
 	URL       string      `json:"url,omitempty" faker:"url" db:"url"`
-	BodyText  null.String `json:"body_text,omitempty" db:"body_text"`
-	AISummary null.String `json:"ai_summary,omitempty" db:"ai_summary"`
+	BodyText  null.String `json:"body_text,omitempty" faker:"-" db:"body_text"`
+	AISummary null.String `json:"ai_summary,omitempty" faker:"-" db:"ai_summary"`
 }
 
 func UnmarshalJSONNewsStory(j string) (NewsStory, error) {
