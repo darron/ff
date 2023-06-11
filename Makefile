@@ -35,6 +35,9 @@ rebuild: clean migrations ## Force rebuild of all packages.
 linux: clean migrations ## Cross compile for linux.
 	CGO_ENABLED=0 GOOS=linux go build $(BUILD_COMMAND)
 
+linux-amd64: clean migrations
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build $(BUILD_COMMAND)
+
 gzip: ## Compress current compiled binary.
 	gzip bin/$(BINARY_NAME)
 	mv bin/$(BINARY_NAME).gz bin/$(BINARY_NAME)-$(UNAME)-$(ARCH).gz
@@ -47,8 +50,7 @@ unit: ## Run unit tests.
 lint: ## See https://github.com/golangci/golangci-lint#install for install instructions
 	golangci-lint run ./...
 
-deploy-binary: clean migrations
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build $(BUILD_COMMAND)
+deploy-binary: linux-amd64
 	scp bin/ff root@$(DO_BOX):/root/ff
 
 deploy: clean deploy-binary

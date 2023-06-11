@@ -60,6 +60,7 @@
 - [x] SQLite file creation if it doesn't exist.
 - [x] SQLite file migration if it isn't already done.
 - [ ] Cross compile for Linux w/SQLite3?
+- [ ] Will need to run migrations later on - how do we do that? bin/ff migrate?
 - [ ] SQLite stream to storage?
 - [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
 - [ ] Postgres Implementation of Record
