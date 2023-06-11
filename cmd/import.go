@@ -97,7 +97,7 @@ func doImport(conf *config.App) error {
 		for _, link := range links {
 			if link != "" {
 				ns := core.NewsStory{}
-				ns.URL = link
+				ns.URL = cleanUpLink(link)
 				stories = append(stories, ns)
 			}
 		}
@@ -128,6 +128,20 @@ func doImport(conf *config.App) error {
 		conf.Logger.Info(string(body))
 	}
 	return nil
+}
+
+func cleanUpLink(link string) string {
+	u, err := url.Parse(link)
+	if err != nil {
+		return link
+	}
+	q := u.Query()
+	if q.Has("fbclid") {
+		q.Del("fbclid")
+		u.RawQuery = q.Encode()
+		return u.String()
+	}
+	return link
 }
 
 func cellToInt(cell string) int {
