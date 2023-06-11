@@ -1,14 +1,17 @@
 package config
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
 	"github.com/darron/ff/adaptors/redis"
 	"github.com/darron/ff/adaptors/sqlite"
 	"github.com/darron/ff/core"
+	"github.com/jmoiron/sqlx"
 	"golang.org/x/exp/slog"
 )
 
@@ -59,6 +62,14 @@ func WithRedis(conn string) OptFunc {
 }
 
 func WithSQLite(file string) OptFunc {
+	// Does file exist? If it doesn't - create it.
+	if _, err := os.Stat(file); err != nil {
+		err := createSQLite3Database(file)
+		if err != nil {
+			log.Fatal(err)
+		}
+		// TODO: If you've created it - migrate it.
+	}
 	return func(opts *Opts) {
 		opts.RecordRepository = sqlite.RecordRepository{Filename: file}
 		opts.NewsStoryRepository = sqlite.NewsStoryRepository{Filename: file}
@@ -183,5 +194,20 @@ func (t TLS) Verify() error {
 	if t.Email == "" {
 		return errors.New("Email address cannot be empty")
 	}
+	return nil
+}
+
+func createSQLite3Database(file string) error {
+	log.Println("Creating SQLite3 db.")
+	newDB, err := sql.Open("sqlite3", file)
+	if err != nil {
+		return err
+	}
+	db := sqlx.NewDb(newDB, "sqlite3")
+	_, err = db.Exec("PRAGMA foreign_keys=OFF;")
+	if err != nil {
+		return err
+	}
+	db.Close()
 	return nil
 }

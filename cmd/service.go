@@ -47,8 +47,8 @@ var (
 
 func init() {
 	rootCmd.AddCommand(serviceCmd)
-	serviceCmd.Flags().StringVarP(&storageLayer, "storage", "", GetENVVariable("STORAGE", defaultStorageLayer), "Storage Layer: redis or sqlite")
-	serviceCmd.Flags().StringVarP(&sqliteFile, "sqlite", "", GetENVVariable("SQLITE", defaultSQLiteFile), "SQLite Filename")
+	serviceCmd.Flags().StringVarP(&storageLayer, "storage", "", GetENVVariable("STORAGE", defaultStorageLayer), "Storage Layer: redis or sqlite3")
+	serviceCmd.Flags().StringVarP(&sqliteFile, "sqlite3", "", GetENVVariable("SQLITE3", defaultSQLiteFile), "SQLite3 Filename")
 	serviceCmd.Flags().StringVarP(&redisConn, "redisConn", "r", GetENVVariable("REDIS", defaultRedisConn), "Redis connection string")
 	serviceCmd.Flags().StringVarP(&jwtSecret, "jwtSecret", "", GetENVVariable("JWT_SECRET", defaultJWTSecret()), "JWT Secret")
 	serviceCmd.Flags().BoolVarP(&profilingEnabled, "profiling", "", GetBoolENVVariable("PROFILING_ENABLED", defaultProfilingEnabled), "Enable Datadog tracing and profiling")
@@ -66,7 +66,7 @@ func StartService() {
 	switch storageLayer {
 	case "redis":
 		opts = append(opts, config.WithRedis(redisConn))
-	case "sqlite":
+	case "sqlite3":
 		opts = append(opts, config.WithSQLite(sqliteFile))
 	default:
 		log.Fatal("Must pick supported storage layer.")
