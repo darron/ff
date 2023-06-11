@@ -57,6 +57,8 @@
 - [x] Be able to disabled caching by flag.
 - [x] SQLite Implementation of Record
 - [x] SQLite Implementation of NewsStory
+- [ ] SQLite file creation if it doesn't exist.
+- [ ] SQLite file migration if it isn't already done.
 - [ ] SQLite stream to storage?
 - [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
 - [ ] Postgres Implementation of Record
