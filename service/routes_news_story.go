@@ -2,12 +2,14 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
+	"regexp"
+	"strings"
 
 	"github.com/darron/ff/core"
 	"github.com/labstack/echo/v4"
+	"gopkg.in/guregu/null.v4"
 
 	"github.com/microcosm-cc/bluemonday"
 )
@@ -62,15 +64,28 @@ func (s HTTPService) DownloadNewsStory(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	// Strip all tags.
+	// Strip all tags and clean it up a bit.
+	// TODO: This still needs a ton of work.
 	p := bluemonday.StrictPolicy()
 	text := p.Sanitize(string(html))
-	fmt.Println(text)
-	// TODO: Save it in the DB.
-	// ns.BodyText = text
-	// nsID, err := s.conf.NewsStoryRepository.Store(ns)
-	// if err != nil {
-	// 	return c.JSON(http.StatusInternalServerError, err.Error())
-	// }
-	return c.JSON(http.StatusCreated, id)
+	text = cleanupDownload(text)
+	ns.BodyText = null.NewString(text, true)
+	_, err = s.conf.NewsStoryRepository.Store(ns)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusNoContent, ns.ID)
+}
+
+func cleanupDownload(text string) string {
+	// Let's get rid of ALL the extra lines.
+	re := regexp.MustCompile("(?m)^\\s*$[\r\n]*")
+	text = strings.Trim(re.ReplaceAllString(text, ""), "\r\n")
+	// Let's get rid of all leading and trailing spaces.
+	var newLines []string
+	for _, line := range strings.Split(text, "\n") {
+		newLines = append(newLines, strings.TrimSpace(line))
+	}
+	text = strings.Join(newLines, "\n")
+	return text
 }
