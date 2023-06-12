@@ -1,5 +1,6 @@
 FROM golang:1.20 as build
 RUN mkdir /ff
+RUN go install github.com/kevinburke/go-bindata/v4/...@latest
 WORKDIR /ff
 ADD . .
 RUN make linux

@@ -1,3 +1,4 @@
+SHELL := /bin/bash
 BINARY_NAME ?= ff
 CONTAINER_NAME ?= darron/ff
 DO_BOX ?= 127.0.0.1
@@ -32,9 +33,10 @@ build: clean migrations
 rebuild: clean migrations ## Force rebuild of all packages.
 	go build -a $(BUILD_COMMAND)
 
-linux: clean migrations ## Cross compile for linux.
-	CGO_ENABLED=0 GOOS=linux go build $(BUILD_COMMAND)
+linux: clean migrations ## Compile for Linux/Docker.
+	CGO_ENABLED=1 GOOS=linux go build -ldflags "-linkmode external -extldflags -static" $(BUILD_COMMAND)
 
+# Cross compile locally on OS X.
 # SQLite3 makes this required: brew install FiloSottile/musl-cross/musl-cross
 # See: https://github.com/mattn/go-sqlite3#cross-compile
 linux-amd64: clean migrations

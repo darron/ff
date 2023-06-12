@@ -27,7 +27,7 @@ var (
 		},
 	}
 
-	defaultStorageLayer = "redis"
+	defaultStorageLayer = "sqlite3"
 	storageLayer        string
 
 	defaultRedisConn = "127.0.0.1:6379"
