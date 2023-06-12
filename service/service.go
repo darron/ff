@@ -122,6 +122,7 @@ func Get(conf *config.App, templates string) (*echo.Echo, error) {
 	j.POST(RecordsAPIPath, s.CreateRecord)
 	j.GET(NewsStoriesAPIPath+"/:id", s.GetNewsStory)
 	j.POST(NewsStoriesAPIPath, s.CreateNewsStory)
+	j.POST(NewsStoriesAPIPath+"/download/:id", s.DownloadNewsStory)
 
 	return e, nil
 }

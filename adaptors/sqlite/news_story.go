@@ -63,8 +63,10 @@ func (nsr NewsStoryRepository) store(ctx context.Context, ns *core.NewsStory, cl
 		return "", fmt.Errorf("store/client.Begin Error: %w", err)
 	}
 
-	// Insert the NewsStory
-	newsStoryQuery := "INSERT INTO news_stories (id, record_id, url, body_text, ai_summary) VALUES (?, ?, ?, ?, ?)"
+	// Insert/Upsert the NewsStory
+	newsStoryQuery := `INSERT INTO news_stories (id, record_id, url, body_text, ai_summary) VALUES (?, ?, ?, ?, ?)
+		ON CONFLICT (id)
+		DO UPDATE SET url=excluded.url, body_text=excluded.body_text, ai_summary=excluded.ai_summary`
 	_, err = tx.Exec(newsStoryQuery, ns.ID, ns.RecordID, ns.URL, ns.BodyText, ns.AISummary)
 	if err != nil {
 		tx.Rollback() //nolint
