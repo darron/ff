@@ -61,7 +61,9 @@
 - [x] SQLite file migration if it isn't already done.
 - [x] Cross compile for Linux w/SQLite3?
 - [ ] Will need to run migrations later on - how do we do that? bin/ff migrate?
-- [ ] SQLite stream to storage?
+- [x] SQLite stream to storage?
+- [ ] Integrate News Stories with Web downloading.
+- [ ] Integrate News Stories with AI Summaries.
 - [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
 - [ ] Postgres Implementation of Record
 - [ ] Postgres Implementation of NewsStory
@@ -80,7 +82,5 @@
 - [ ] Add Search?
 - [ ] https://echo.labstack.com/cookbook/graceful-shutdown/
 - [ ] Might need to do some more performance tuning once we have more traffic.
-- [ ] Integrate News Stories with Web downloading.
-- [ ] Integrate News Stories with AI Summaries.
 
 And much, much more.
