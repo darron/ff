@@ -13,6 +13,7 @@ import (
 
 var (
 	processNewsStoryID          string
+	processNewsAll              bool
 	processNewsStoryDownloadCmd = &cobra.Command{
 		Use:   "news",
 		Short: "Download NewsStory body text",
@@ -23,6 +24,12 @@ var (
 				config.WithJWTToken(jwtToken))
 			if err != nil {
 				log.Fatal(err)
+			}
+			if processNewsAll {
+				err = processAllNewsStories(conf)
+				if err != nil {
+					log.Fatal(err)
+				}
 			}
 			err = processNewsStoryDownload(conf)
 			if err != nil {
@@ -35,6 +42,7 @@ var (
 func init() {
 	processCmd.AddCommand(processNewsStoryDownloadCmd)
 	processNewsStoryDownloadCmd.Flags().StringVarP(&processNewsStoryID, "news", "", "", "NewsStort ID to Download NewsStory")
+	processNewsStoryDownloadCmd.Flags().BoolVarP(&processNewsAll, "all", "", false, "Download all empty news")
 }
 
 func processNewsStoryDownload(conf *config.App) error {
@@ -48,6 +56,29 @@ func processNewsStoryDownload(conf *config.App) error {
 		return err
 	}
 	conf.Logger.Debug("processNewsStoryDownload", "url", u)
+	req := getHTTPRequest(http.MethodPost, u, "", conf.JWTToken)
+	// Send the HTTP request.
+	res, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return err
+	}
+	conf.Logger.Info(string(body))
+	return nil
+}
+
+func processAllNewsStories(conf *config.App) error {
+	client := getHTTPClient()
+	// Make up the proper URL including port and path.
+	u, err := url.JoinPath(conf.GetHTTPEndpoint(), service.NewsStoriesAPIPathFull, "getall")
+	if err != nil {
+		return err
+	}
+	conf.Logger.Debug("processAllNewsStories", "url", u)
 	req := getHTTPRequest(http.MethodPost, u, "", conf.JWTToken)
 	// Send the HTTP request.
 	res, err := client.Do(req)

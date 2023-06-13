@@ -123,6 +123,7 @@ func Get(conf *config.App, templates string) (*echo.Echo, error) {
 	j.GET(NewsStoriesAPIPath+"/:id", s.GetNewsStory)
 	j.POST(NewsStoriesAPIPath, s.CreateNewsStory)
 	j.POST(NewsStoriesAPIPath+"/download/:id", s.DownloadNewsStory)
+	j.POST(NewsStoriesAPIPath+"/getall", s.DownloadAllNewsStories)
 
 	return e, nil
 }

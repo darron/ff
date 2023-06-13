@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"regexp"
@@ -55,26 +56,60 @@ func (s HTTPService) DownloadNewsStory(c echo.Context) error {
 	}
 	// If news story exists - let's:
 	// Download the HTML.
-	resp, err := http.Get(ns.URL)
+	text, err := getNewsText(ns.URL)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	defer resp.Body.Close()
-	html, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
-	// Strip all tags and clean it up a bit.
-	// TODO: This still needs a ton of work.
-	p := bluemonday.StrictPolicy()
-	text := p.Sanitize(string(html))
-	text = cleanupDownload(text)
 	ns.BodyText = null.NewString(text, true)
 	_, err = s.conf.NewsStoryRepository.Store(ns)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusNoContent, ns.ID)
+}
+
+func (s HTTPService) DownloadAllNewsStories(c echo.Context) error {
+	// Get all Records.
+	records, err := s.conf.RecordRepository.GetAll()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	ns := null.NewString("", false)
+	// Let's loop through all the stories.
+	for _, record := range records {
+		for _, story := range record.NewsStories {
+			if story.BodyText == ns {
+				fmt.Println("Getting ", story.URL)
+				text, err := getNewsText(story.URL)
+				if err != nil {
+					return c.JSON(http.StatusInternalServerError, err.Error())
+				}
+				story.BodyText = null.NewString(text, true)
+				_, err = s.conf.NewsStoryRepository.Store(&story)
+				if err != nil {
+					return c.JSON(http.StatusInternalServerError, err.Error())
+				}
+			}
+		}
+	}
+	return c.JSON(http.StatusNoContent, "got 'em all")
+}
+
+func getNewsText(u string) (string, error) {
+	resp, err := http.Get(u)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	html, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	// Strip all tags and clean it up a bit.
+	// TODO: This still needs a ton of work.
+	p := bluemonday.StrictPolicy()
+	text := p.Sanitize(string(html))
+	return cleanupDownload(text), nil
 }
 
 func cleanupDownload(text string) string {
