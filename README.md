@@ -62,7 +62,7 @@
 - [x] Cross compile for Linux w/SQLite3?
 - [ ] Will need to run migrations later on - how do we do that? bin/ff migrate?
 - [x] SQLite stream to storage?
-- [ ] Integrate News Stories with Web downloading.
+- [x] Integrate News Stories with Web downloading.
 - [ ] Integrate News Stories with AI Summaries.
 - [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
 - [ ] Postgres Implementation of Record
