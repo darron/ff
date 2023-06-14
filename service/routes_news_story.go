@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"regexp"
 	"strings"
@@ -74,15 +75,15 @@ func (s HTTPService) DownloadAllNewsStories(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	ns := null.NewString("", false)
 	// Let's loop through all the stories.
 	for _, record := range records {
 		for _, story := range record.NewsStories {
-			if story.BodyText == ns {
+			if story.BodyText.String == "" {
 				fmt.Println("Getting ", story.URL)
 				text, err := getNewsText(story.URL)
 				if err != nil {
-					return c.JSON(http.StatusInternalServerError, err.Error())
+					log.Println("Error: ", err, "URL: ", story.URL)
+					continue
 				}
 				story.BodyText = null.NewString(text, true)
 				_, err = s.conf.NewsStoryRepository.Store(&story)

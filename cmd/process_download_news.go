@@ -5,9 +5,12 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
+	"time"
 
 	"github.com/darron/ff/config"
 	"github.com/darron/ff/service"
+	"github.com/gojek/heimdall/v7/httpclient"
 	"github.com/spf13/cobra"
 )
 
@@ -29,6 +32,8 @@ var (
 				err = processAllNewsStories(conf)
 				if err != nil {
 					log.Fatal(err)
+				} else {
+					os.Exit(0)
 				}
 			}
 			err = processNewsStoryDownload(conf)
@@ -72,7 +77,8 @@ func processNewsStoryDownload(conf *config.App) error {
 }
 
 func processAllNewsStories(conf *config.App) error {
-	client := getHTTPClient()
+	client := httpclient.NewClient(
+		httpclient.WithHTTPTimeout(10 * time.Minute))
 	// Make up the proper URL including port and path.
 	u, err := url.JoinPath(conf.GetHTTPEndpoint(), service.NewsStoriesAPIPathFull, "getall")
 	if err != nil {
