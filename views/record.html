@@ -47,6 +47,7 @@
 <h3>News Stories</h3>
 {{range $val := .NewsStories}}
 <div style="margin-bottom: 5px;"><a href="{{$val.URL}}">{{$val.URL}}</a></div>
+<div style="margin-bottom: 5px;">{{ nullstring $val.BodyText }}</div>
 {{end}}
 {{template "footer"}}
 </body>

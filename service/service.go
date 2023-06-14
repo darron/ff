@@ -122,6 +122,8 @@ func Get(conf *config.App, templates string) (*echo.Echo, error) {
 	j.POST(RecordsAPIPath, s.CreateRecord)
 	j.GET(NewsStoriesAPIPath+"/:id", s.GetNewsStory)
 	j.POST(NewsStoriesAPIPath, s.CreateNewsStory)
+	j.POST(NewsStoriesAPIPath+"/download/:id", s.DownloadNewsStory)
+	j.POST(NewsStoriesAPIPath+"/getall", s.DownloadAllNewsStories)
 
 	return e, nil
 }
@@ -139,14 +141,22 @@ func nullbool(n null.Bool) string {
 	return ""
 }
 
+func nullstring(n null.String) string {
+	if n.String != "" {
+		return n.String
+	}
+	return ""
+}
+
 func GetTemplates(p string) (*Template, error) {
 	// Let's setup templates with custom funcs.
 	t := &Template{
 		templates: template.New(""),
 	}
 	funcMap := template.FuncMap{
-		"nullbool": nullbool,
-		"toLower":  strings.ToLower,
+		"nullbool":   nullbool,
+		"nullstring": nullstring,
+		"toLower":    strings.ToLower,
 	}
 	t.templates = t.templates.Funcs(funcMap)
 	_, err := t.templates.ParseGlob(p)
