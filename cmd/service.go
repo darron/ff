@@ -38,6 +38,8 @@ var (
 
 	jwtSecret string
 
+	openAIAPIKey string
+
 	defaultProfilingEnabled = false
 	profilingEnabled        bool
 
@@ -47,12 +49,13 @@ var (
 
 func init() {
 	rootCmd.AddCommand(serviceCmd)
+	serviceCmd.Flags().BoolVarP(&middlewareHTMLCacheEnabled, "htmlcache", "", GetBoolENVVariable("HTMLCACHE_ENABLED", defaultMiddlewareHTMLCacheEnabled), "Enable Middleware Cache")
+	serviceCmd.Flags().StringVarP(&jwtSecret, "jwtSecret", "", GetENVVariable("JWT_SECRET", defaultJWTSecret()), "JWT Secret")
+	serviceCmd.Flags().StringVarP(&openAIAPIKey, "openai", "", GetENVVariable("OPENAI_API_KEY", ""), "OpenAI API Key")
+	serviceCmd.Flags().BoolVarP(&profilingEnabled, "profiling", "", GetBoolENVVariable("PROFILING_ENABLED", defaultProfilingEnabled), "Enable Datadog tracing and profiling")
+	serviceCmd.Flags().StringVarP(&redisConn, "redisConn", "r", GetENVVariable("REDIS", defaultRedisConn), "Redis connection string")
 	serviceCmd.Flags().StringVarP(&storageLayer, "storage", "", GetENVVariable("STORAGE", defaultStorageLayer), "Storage Layer: redis or sqlite3")
 	serviceCmd.Flags().StringVarP(&sqliteFile, "sqlite3", "", GetENVVariable("SQLITE3", defaultSQLiteFile), "SQLite3 Filename")
-	serviceCmd.Flags().StringVarP(&redisConn, "redisConn", "r", GetENVVariable("REDIS", defaultRedisConn), "Redis connection string")
-	serviceCmd.Flags().StringVarP(&jwtSecret, "jwtSecret", "", GetENVVariable("JWT_SECRET", defaultJWTSecret()), "JWT Secret")
-	serviceCmd.Flags().BoolVarP(&profilingEnabled, "profiling", "", GetBoolENVVariable("PROFILING_ENABLED", defaultProfilingEnabled), "Enable Datadog tracing and profiling")
-	serviceCmd.Flags().BoolVarP(&middlewareHTMLCacheEnabled, "htmlcache", "", GetBoolENVVariable("HTMLCACHE_ENABLED", defaultMiddlewareHTMLCacheEnabled), "Enable Middleware Cache")
 }
 
 func StartService() {
@@ -90,6 +93,10 @@ func StartService() {
 			log.Fatal(err)
 		}
 		opts = append(opts, config.WithTLS(tls))
+	}
+
+	if openAIAPIKey != "" {
+		opts = append(opts, config.WithOpenAIAPI(openAIAPIKey))
 	}
 
 	// Let's get the config for the app

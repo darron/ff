@@ -211,6 +211,10 @@ github.com/redis/rueidis/internal/util
 github.com/richardartoul/molecule
 github.com/richardartoul/molecule/src/codec
 github.com/richardartoul/molecule/src/protowire
+# github.com/sashabaranov/go-openai v1.10.1
+## explicit; go 1.18
+github.com/sashabaranov/go-openai
+github.com/sashabaranov/go-openai/internal
 # github.com/secure-systems-lab/go-securesystemslib v0.5.0
 ## explicit; go 1.17
 github.com/secure-systems-lab/go-securesystemslib/cjson

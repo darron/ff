@@ -28,6 +28,7 @@ type Opts struct {
 	Logger              *slog.Logger
 	MiddlewareHTMLCache bool
 	NewsStoryRepository core.NewsStoryService
+	OpenAIAPIKey        string
 	Port                string
 	RecordRepository    core.RecordService
 	TLS                 TLS
@@ -94,6 +95,12 @@ func WithMiddlewareHTMLCache(enabled bool) OptFunc {
 func WithJWTSecret(secret string) OptFunc {
 	return func(opts *Opts) {
 		opts.JWTSecret = secret
+	}
+}
+
+func WithOpenAIAPI(token string) OptFunc {
+	return func(opts *Opts) {
+		opts.OpenAIAPIKey = token
 	}
 }
 

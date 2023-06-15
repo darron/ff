@@ -18,6 +18,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/microcosm-cc/bluemonday v1.0.24
 	github.com/redis/rueidis v1.0.4
+	github.com/sashabaranov/go-openai v1.10.1
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.3
 	github.com/tidwall/gjson v1.14.4

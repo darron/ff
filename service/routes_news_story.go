@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -11,6 +12,7 @@ import (
 
 	"github.com/darron/ff/core"
 	"github.com/labstack/echo/v4"
+	openai "github.com/sashabaranov/go-openai"
 	"gopkg.in/guregu/null.v4"
 
 	"github.com/microcosm-cc/bluemonday"
@@ -94,6 +96,54 @@ func (s HTTPService) DownloadAllNewsStories(c echo.Context) error {
 		}
 	}
 	return c.JSON(http.StatusNoContent, "got 'em all")
+}
+
+func (s HTTPService) SummarizeNewsStory(c echo.Context) error {
+	id := c.Param("id")
+	if id == "" {
+		return c.JSON(http.StatusNotFound, "id must not be blank")
+	}
+	ns, err := s.conf.NewsStoryRepository.Find(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	// Check to make sure the story is already downloaded.
+	if ns.BodyText.String == "" {
+		return c.JSON(http.StatusBadRequest, "must have downloaded the story already")
+	}
+
+	// Let's connect to OpenAI.
+	client := openai.NewClient(s.conf.OpenAIAPIKey)
+	ctx := context.Background()
+	text := ns.BodyText.String
+
+	// Create the request parameters
+	params := openai.ChatCompletionRequest{
+		Model:       "gpt-3.5-turbo",
+		Prompt:      text,
+		MaxTokens:   100,
+		Temperature: 0.3,
+	}
+	// Ask OpenAI.
+	result, err := client.CreateChatCompletion(ctx, params)
+	if err != nil {
+		log.Fatalf("Failed to generate completion: %v", err)
+	}
+
+	// Extract the summary from the completion response
+	summary := result.Choices[0].Text
+	ns.AISummary = null.NewString(summary, true)
+
+	// // Save it
+	// _, err = s.conf.NewsStoryRepository.Store(ns)
+	// if err != nil {
+	// 	return c.JSON(http.StatusInternalServerError, err.Error())
+	// }
+
+	fmt.Println(summary)
+
+	return c.JSON(http.StatusNoContent, ns.ID)
 }
 
 func getNewsText(u string) (string, error) {
