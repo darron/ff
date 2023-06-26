@@ -5,15 +5,12 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/darron/ff/config"
 	"github.com/darron/ff/service"
 	"github.com/go-faker/faker/v4"
 	"github.com/spf13/cobra"
-	"golang.org/x/crypto/acme"
-	"golang.org/x/crypto/acme/autocert"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 	"gopkg.in/DataDog/dd-trace-go.v1/profiler"
 )
@@ -93,24 +90,27 @@ func StartService() {
 			log.Fatal(err)
 		}
 		// Let's setup the service http.Server tls.Config
-		domains := strings.Split(tlsVar.DomainNames, ",")
-		autoTLSManager := autocert.Manager{
-			Prompt:     autocert.AcceptTOS,
-			Cache:      autocert.DirCache(tlsVar.CacheDir),
-			Email:      tlsVar.Email,
-			HostPolicy: autocert.HostWhitelist(domains...),
-		}
-		tlsConfig = &tls.Config{
-			GetCertificate: autoTLSManager.GetCertificate,
-			NextProtos:     []string{acme.ALPNProto},
-		}
+		tlsConfig = tlsVar.LetsEncryptTLSConfig()
 		opts = append(opts, config.WithTLS(tlsVar))
 	}
 
 	// If we have manually generated certs - let's use those for HTTPS
 	// Setup the config here.
 	if enableTLS && (tlsCert != "") && (tlsKey != "") {
-
+		tlsVar := config.TLS{
+			CertFile: tlsCert,
+			KeyFile:  tlsKey,
+			Enable:   enableTLS,
+		}
+		err := tlsVar.StaticCredentialsVerify()
+		if err != nil {
+			log.Fatal(err)
+		}
+		tlsConfig, err = tlsVar.StaticCredentialsTLSConfig()
+		if err != nil {
+			log.Fatal(err)
+		}
+		opts = append(opts, config.WithTLS(tlsVar))
 	}
 
 	// Let's get the config for the app
