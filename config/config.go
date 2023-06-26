@@ -185,7 +185,7 @@ func GetLogger(level, format string) *slog.Logger {
 	return log
 }
 
-func (t TLS) Verify() error {
+func (t TLS) LetsEncryptVerify() error {
 	if t.CacheDir == "" {
 		return errors.New("Cache dir cannot be emtpy")
 	}

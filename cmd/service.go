@@ -58,6 +58,8 @@ func init() {
 func StartService() {
 	// Setup some options
 	var opts []config.OptFunc
+	var tlsConfig *tls.Config
+
 	opts = append(opts, config.WithPort(port))
 	opts = append(opts, config.WithLogger(logLevel, logFormat))
 	opts = append(opts, config.WithMiddlewareHTMLCache(middlewareHTMLCacheEnabled))
@@ -77,19 +79,38 @@ func StartService() {
 		opts = append(opts, config.WithJWTSecret(jwtSecret))
 	}
 
-	// Let's turn on TLS.
-	if enableTLS {
-		tls := config.TLS{
+	// Let's turn on TLS with LetsEncrypt
+	// Setup the config here.
+	if enableTLS && enableTLSLetsEncrypt {
+		tlsVar := config.TLS{
 			CacheDir:    tlsCache,
 			DomainNames: tlsDomains,
 			Email:       tlsEmail,
 			Enable:      enableTLS,
 		}
-		err := tls.Verify()
+		err := tlsVar.LetsEncryptVerify()
 		if err != nil {
 			log.Fatal(err)
 		}
-		opts = append(opts, config.WithTLS(tls))
+		// Let's setup the service http.Server tls.Config
+		domains := strings.Split(tlsVar.DomainNames, ",")
+		autoTLSManager := autocert.Manager{
+			Prompt:     autocert.AcceptTOS,
+			Cache:      autocert.DirCache(tlsVar.CacheDir),
+			Email:      tlsVar.Email,
+			HostPolicy: autocert.HostWhitelist(domains...),
+		}
+		tlsConfig = &tls.Config{
+			GetCertificate: autoTLSManager.GetCertificate,
+			NextProtos:     []string{acme.ALPNProto},
+		}
+		opts = append(opts, config.WithTLS(tlsVar))
+	}
+
+	// If we have manually generated certs - let's use those for HTTPS
+	// Setup the config here.
+	if enableTLS && (tlsCert != "") && (tlsKey != "") {
+
 	}
 
 	// Let's get the config for the app
@@ -129,20 +150,10 @@ func StartService() {
 
 	// If we are going to turn on TLS - let's launch it.
 	if enableTLS {
-		domains := strings.Split(conf.TLS.DomainNames, ",")
-		autoTLSManager := autocert.Manager{
-			Prompt:     autocert.AcceptTOS,
-			Cache:      autocert.DirCache(conf.TLS.CacheDir),
-			Email:      conf.TLS.Email,
-			HostPolicy: autocert.HostWhitelist(domains...),
-		}
 		h := http.Server{
-			Addr:    ":443",
-			Handler: s,
-			TLSConfig: &tls.Config{
-				GetCertificate: autoTLSManager.GetCertificate,
-				NextProtos:     []string{acme.ALPNProto},
-			},
+			Addr:        ":443",
+			Handler:     s,
+			TLSConfig:   tlsConfig,
 			ReadTimeout: 30 * time.Second, // use custom timeouts
 		}
 		if err := h.ListenAndServeTLS("", ""); err != http.ErrServerClosed {
