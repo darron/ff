@@ -60,9 +60,13 @@
 - [x] SQLite file creation if it doesn't exist.
 - [x] SQLite file migration if it isn't already done.
 - [x] Cross compile for Linux w/SQLite3?
-- [ ] Will need to run migrations later on - how do we do that? bin/ff migrate?
+- [x] Deploy to domain name? massmurdercanada.org
+- [x] Put Behind Cloudflare?
+- [x] Will need to run migrations later on - how do we do that? bin/ff migrate?
 - [x] SQLite stream to storage?
 - [x] Integrate News Stories with Web downloading.
+- [ ] Get CRUD working for Record
+- [ ] Get CRUD working for NewsStory
 - [ ] Integrate News Stories with AI Summaries.
 - [ ] Need some additional JWT work: actually check the claims - how to get them generated and asssigned to me?
 - [ ] Postgres Implementation of Record
@@ -71,11 +75,7 @@
 - [ ] Do I need to add some contexts to track requests?
 - [ ] Add /healthz which tests for health of DB?
 - [ ] Some sort of Analytics
-- [ ] Deploy to domain name?
-- [ ] Put Behind Cloudflare?
 - [ ] Integrate StatsCan homicide records.
-- [ ] Get CRUD working for Record
-- [ ] Get CRUD working for NewsStory
 - [ ] Add Feature Flag Interface - use in-memory / augmented by written file - https://openfeature.dev/ - https://github.com/open-feature/flagd
 - [ ] Better Groups/Tags interface.
 - [ ] Make it actually be organized/designed?
