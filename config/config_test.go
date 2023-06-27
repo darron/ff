@@ -23,7 +23,7 @@ func TestGetHTTPEndpoint(t *testing.T) {
 	assert.Equal(t, want, got)
 }
 
-func TestTLSVerify(t *testing.T) {
+func TestTLSLetsEncryptVerify(t *testing.T) {
 	// Happy path - all good.
 	dir, err := os.MkdirTemp("", "example")
 	assert.NoError(t, err)
@@ -34,7 +34,7 @@ func TestTLSVerify(t *testing.T) {
 		Email:       "darron@froese.org",
 		Enable:      true,
 	}
-	err = tls.Verify()
+	err = tls.LetsEncryptVerify()
 	assert.NoError(t, err)
 	// Create one - but it won't be there:
 	dir, _ = os.MkdirTemp("", "example")
@@ -43,18 +43,18 @@ func TestTLSVerify(t *testing.T) {
 	// It will be recreated - so let's make sure it's deleted.
 	defer os.RemoveAll(dir)
 	tls.CacheDir = dir
-	err = tls.Verify()
+	err = tls.LetsEncryptVerify()
 	assert.NoError(t, err)
 	// Let's remove the email address.
 	tls.Email = ""
-	err = tls.Verify()
+	err = tls.LetsEncryptVerify()
 	assert.Error(t, err)
 	// Let's remove the domain name.
 	tls.DomainNames = ""
-	err = tls.Verify()
+	err = tls.LetsEncryptVerify()
 	assert.Error(t, err)
 	// Let's remove the directory.
 	tls.CacheDir = ""
-	err = tls.Verify()
+	err = tls.LetsEncryptVerify()
 	assert.Error(t, err)
 }

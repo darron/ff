@@ -29,11 +29,15 @@ var (
 
 	jwtToken string
 
-	defaultEnableTLS = false
-	enableTLS        bool
-	tlsCache         string
-	tlsDomains       string
-	tlsEmail         string
+	defaultEnableTLS            = false
+	defaultEnableTLSLetsEncrypt = false
+	enableTLS                   bool
+	enableTLSLetsEncrypt        bool
+	tlsCache                    string
+	tlsCert                     string
+	tlsDomains                  string
+	tlsEmail                    string
+	tlsKey                      string
 )
 
 func init() {
@@ -42,9 +46,12 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&port, "port", "p", GetENVVariable("PORT", defaultPort), "HTTP Port to listen on")
 	rootCmd.PersistentFlags().StringVarP(&jwtToken, "jwt", "", GetENVVariable("JWT_BEARER_TOKEN", ""), "JWT Token to Access API endpoints.")
 	rootCmd.PersistentFlags().BoolVarP(&enableTLS, "tls", "", GetBoolENVVariable("ENABLE_TLS", defaultEnableTLS), "Enable TLS")
+	rootCmd.PersistentFlags().BoolVarP(&enableTLSLetsEncrypt, "letsencrypt", "", GetBoolENVVariable("ENABLE_TLS_LETS_ENCRYPT", defaultEnableTLSLetsEncrypt), "Enable LetsEncrypt")
 	rootCmd.PersistentFlags().StringVarP(&tlsCache, "tlsCache", "", GetENVVariable("TLS_CACHE", ""), "Cache Dir for TLS Certificate")
+	rootCmd.PersistentFlags().StringVarP(&tlsCert, "cert", "", GetENVVariable("TLS_CERT", ""), "Manual TLS Cert")
 	rootCmd.PersistentFlags().StringVarP(&tlsDomains, "tlsDomains", "", GetENVVariable("TLS_DOMAINS", ""), "Domains for TLS Certificate - separate by commas")
 	rootCmd.PersistentFlags().StringVarP(&tlsEmail, "tlsEmail", "", GetENVVariable("TLS_EMAIL", ""), "Email Address for TLS Certificate")
+	rootCmd.PersistentFlags().StringVarP(&tlsKey, "key", "", GetENVVariable("TLS_KEY", ""), "Manual TLS Key")
 
 }
 

@@ -62,6 +62,8 @@ deploy: clean deploy-binary
 	scp -rp public/* root@$(DO_BOX):/root/public/
 	scp import.csv root@$(DO_BOX):/root/import.csv
 	scp deploy/tls_cache/* root@$(DO_BOX):/root/tls_cache/
+	scp deploy/cloudflare_tls/* root@$(DO_BOX):/root/cloudflare_tls/
+	scp deploy/cloudflare.sh root@$(DO_BOX):/root/cloudflare.sh
 	scp deploy/setup.sh root@$(DO_BOX):/root/setup.sh
 
 grab-files:

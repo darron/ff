@@ -1,6 +1,7 @@
 package config
 
 import (
+	"crypto/tls"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -13,6 +14,8 @@ import (
 	"github.com/darron/ff/config/migrations"
 	"github.com/darron/ff/core"
 	"github.com/jmoiron/sqlx"
+	"golang.org/x/crypto/acme"
+	"golang.org/x/crypto/acme/autocert"
 	"golang.org/x/exp/slog"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -35,9 +38,11 @@ type Opts struct {
 
 type TLS struct {
 	CacheDir    string
+	CertFile    string
 	DomainNames string
 	Email       string
 	Enable      bool
+	KeyFile     string
 }
 
 type App struct {
@@ -185,7 +190,7 @@ func GetLogger(level, format string) *slog.Logger {
 	return log
 }
 
-func (t TLS) Verify() error {
+func (t TLS) LetsEncryptVerify() error {
 	if t.CacheDir == "" {
 		return errors.New("Cache dir cannot be emtpy")
 	}
@@ -204,6 +209,39 @@ func (t TLS) Verify() error {
 		return errors.New("Email address cannot be empty")
 	}
 	return nil
+}
+
+func (t TLS) StaticCredentialsVerify() error {
+	_, err := tls.LoadX509KeyPair(t.CertFile, t.KeyFile)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (t TLS) StaticCredentialsTLSConfig() (*tls.Config, error) {
+	var tlsConfig *tls.Config
+	cer, err := tls.LoadX509KeyPair(t.CertFile, t.KeyFile)
+	if err != nil {
+		return tlsConfig, err
+	}
+	tlsConfig = &tls.Config{Certificates: []tls.Certificate{cer}}
+	return tlsConfig, nil
+}
+
+func (t TLS) LetsEncryptTLSConfig() *tls.Config {
+	domains := strings.Split(t.DomainNames, ",")
+	autoTLSManager := autocert.Manager{
+		Prompt:     autocert.AcceptTOS,
+		Cache:      autocert.DirCache(t.CacheDir),
+		Email:      t.Email,
+		HostPolicy: autocert.HostWhitelist(domains...),
+	}
+	tlsConfig := tls.Config{
+		GetCertificate: autoTLSManager.GetCertificate,
+		NextProtos:     []string{acme.ALPNProto},
+	}
+	return &tlsConfig
 }
 
 func createSQLite3Database(file string) error {

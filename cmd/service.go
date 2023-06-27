@@ -5,15 +5,12 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/darron/ff/config"
 	"github.com/darron/ff/service"
 	"github.com/go-faker/faker/v4"
 	"github.com/spf13/cobra"
-	"golang.org/x/crypto/acme"
-	"golang.org/x/crypto/acme/autocert"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 	"gopkg.in/DataDog/dd-trace-go.v1/profiler"
 )
@@ -58,6 +55,8 @@ func init() {
 func StartService() {
 	// Setup some options
 	var opts []config.OptFunc
+	var tlsConfig *tls.Config
+
 	opts = append(opts, config.WithPort(port))
 	opts = append(opts, config.WithLogger(logLevel, logFormat))
 	opts = append(opts, config.WithMiddlewareHTMLCache(middlewareHTMLCacheEnabled))
@@ -65,8 +64,10 @@ func StartService() {
 	// Pick the storage layer and do the things.
 	switch storageLayer {
 	case "redis":
+		log.Println("Enabling Redis storage")
 		opts = append(opts, config.WithRedis(redisConn))
 	case "sqlite3":
+		log.Println("Enabling SQLite storage")
 		opts = append(opts, config.WithSQLite(sqliteFile))
 	default:
 		log.Fatal("Must pick supported storage layer.")
@@ -74,22 +75,48 @@ func StartService() {
 
 	// Let's enable JWT if it's defined.
 	if jwtSecret != "" {
+		log.Println("Enabling JWT")
 		opts = append(opts, config.WithJWTSecret(jwtSecret))
 	}
 
-	// Let's turn on TLS.
-	if enableTLS {
-		tls := config.TLS{
+	// Let's turn on TLS with LetsEncrypt
+	// Setup the config here.
+	if enableTLS && enableTLSLetsEncrypt {
+		log.Println("Enabling LetsEncrypt")
+		tlsVar := config.TLS{
 			CacheDir:    tlsCache,
 			DomainNames: tlsDomains,
 			Email:       tlsEmail,
 			Enable:      enableTLS,
 		}
-		err := tls.Verify()
+		err := tlsVar.LetsEncryptVerify()
 		if err != nil {
 			log.Fatal(err)
 		}
-		opts = append(opts, config.WithTLS(tls))
+		// Let's setup the service http.Server tls.Config
+		tlsConfig = tlsVar.LetsEncryptTLSConfig()
+		opts = append(opts, config.WithTLS(tlsVar))
+	}
+
+	// If we have manually generated certs - let's use those for HTTPS
+	// Setup the config here.
+	if enableTLS && !enableTLSLetsEncrypt && (tlsCert != "") && (tlsKey != "") {
+		log.Println("Enabling TLS with manual certs")
+		tlsVar := config.TLS{
+			CertFile:    tlsCert,
+			DomainNames: tlsDomains,
+			Enable:      enableTLS,
+			KeyFile:     tlsKey,
+		}
+		err := tlsVar.StaticCredentialsVerify()
+		if err != nil {
+			log.Fatal(err)
+		}
+		tlsConfig, err = tlsVar.StaticCredentialsTLSConfig()
+		if err != nil {
+			log.Fatal(err)
+		}
+		opts = append(opts, config.WithTLS(tlsVar))
 	}
 
 	// Let's get the config for the app
@@ -102,6 +129,7 @@ func StartService() {
 	// NOTE: Make sure to set DD_ENV
 	// for each place you're running this.
 	if profilingEnabled {
+		log.Println("Turning on Datadog Tracing")
 		tracer.Start(
 			tracer.WithService("ff"),
 		)
@@ -129,20 +157,10 @@ func StartService() {
 
 	// If we are going to turn on TLS - let's launch it.
 	if enableTLS {
-		domains := strings.Split(conf.TLS.DomainNames, ",")
-		autoTLSManager := autocert.Manager{
-			Prompt:     autocert.AcceptTOS,
-			Cache:      autocert.DirCache(conf.TLS.CacheDir),
-			Email:      conf.TLS.Email,
-			HostPolicy: autocert.HostWhitelist(domains...),
-		}
 		h := http.Server{
-			Addr:    ":443",
-			Handler: s,
-			TLSConfig: &tls.Config{
-				GetCertificate: autoTLSManager.GetCertificate,
-				NextProtos:     []string{acme.ALPNProto},
-			},
+			Addr:        ":443",
+			Handler:     s,
+			TLSConfig:   tlsConfig,
 			ReadTimeout: 30 * time.Second, // use custom timeouts
 		}
 		if err := h.ListenAndServeTLS("", ""); err != http.ErrServerClosed {
