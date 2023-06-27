@@ -103,9 +103,10 @@ func StartService() {
 	if enableTLS && !enableTLSLetsEncrypt && (tlsCert != "") && (tlsKey != "") {
 		log.Println("Enabling TLS with manual certs")
 		tlsVar := config.TLS{
-			CertFile: tlsCert,
-			KeyFile:  tlsKey,
-			Enable:   enableTLS,
+			CertFile:    tlsCert,
+			DomainNames: tlsDomains,
+			Enable:      enableTLS,
+			KeyFile:     tlsKey,
 		}
 		err := tlsVar.StaticCredentialsVerify()
 		if err != nil {
