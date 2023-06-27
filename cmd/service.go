@@ -64,8 +64,10 @@ func StartService() {
 	// Pick the storage layer and do the things.
 	switch storageLayer {
 	case "redis":
+		log.Println("Enabling Redis storage")
 		opts = append(opts, config.WithRedis(redisConn))
 	case "sqlite3":
+		log.Println("Enabling SQLite storage")
 		opts = append(opts, config.WithSQLite(sqliteFile))
 	default:
 		log.Fatal("Must pick supported storage layer.")
@@ -73,12 +75,14 @@ func StartService() {
 
 	// Let's enable JWT if it's defined.
 	if jwtSecret != "" {
+		log.Println("Enabling JWT")
 		opts = append(opts, config.WithJWTSecret(jwtSecret))
 	}
 
 	// Let's turn on TLS with LetsEncrypt
 	// Setup the config here.
 	if enableTLS && enableTLSLetsEncrypt {
+		log.Println("Enabling LetsEncrypt")
 		tlsVar := config.TLS{
 			CacheDir:    tlsCache,
 			DomainNames: tlsDomains,
@@ -96,7 +100,8 @@ func StartService() {
 
 	// If we have manually generated certs - let's use those for HTTPS
 	// Setup the config here.
-	if enableTLS && (tlsCert != "") && (tlsKey != "") {
+	if enableTLS && !enableTLSLetsEncrypt && (tlsCert != "") && (tlsKey != "") {
+		log.Println("Enabling TLS with manual certs")
 		tlsVar := config.TLS{
 			CertFile: tlsCert,
 			KeyFile:  tlsKey,
@@ -123,6 +128,7 @@ func StartService() {
 	// NOTE: Make sure to set DD_ENV
 	// for each place you're running this.
 	if profilingEnabled {
+		log.Println("Turning on Datadog Tracing")
 		tracer.Start(
 			tracer.WithService("ff"),
 		)
