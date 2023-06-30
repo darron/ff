@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"crypto/tls"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,6 +10,7 @@ import (
 	"github.com/darron/ff/config"
 	"github.com/darron/ff/service"
 	"github.com/go-faker/faker/v4"
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 	"gopkg.in/DataDog/dd-trace-go.v1/profiler"
@@ -157,9 +157,12 @@ func StartService() {
 	}
 
 	if logLevel == "debug" {
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetHeader([]string{"Method", "Path"})
 		for _, route := range s.Routes() {
-			fmt.Printf("Route: %s %s\n", route.Method, route.Path)
+			table.Append([]string{route.Method, route.Path})
 		}
+		table.Render()
 	}
 
 	// If we are going to turn on TLS - let's launch it.

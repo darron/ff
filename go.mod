@@ -17,6 +17,7 @@ require (
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/microcosm-cc/bluemonday v1.0.24
+	github.com/olekukonko/tablewriter v0.0.5
 	github.com/redis/rueidis v1.0.4
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.3
@@ -54,6 +55,7 @@ require (
 	github.com/labstack/gommon v0.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
+	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
 	github.com/outcaste-io/ristretto v0.2.1 // indirect
 	github.com/philhofer/fwd v1.1.1 // indirect
