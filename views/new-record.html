@@ -1,0 +1,117 @@
+{{define "new-record"}}<html>
+    <head>
+        <title>Mass Murders 🇨🇦</title>
+        {{template "meta"}}
+    </head>
+<body style="margin:10px;">
+    <h1><a href="/">Mass Murder 🇨🇦</a></h1>
+    <div class="row">
+      <div class="column">
+        <h2>Record Form</h2>
+        <form action="/submit" method="POST">
+          <div class="row">
+            <div class="medium-6 columns">
+              <label>Date:
+                <input type="text" name="date" placeholder="Date">
+              </label>
+            </div>
+            <div class="medium-6 columns">
+              <label>Name:
+                <input type="text" name="name" placeholder="Name">
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="medium-6 columns">
+              <label>City:
+                <input type="text" name="city" placeholder="City">
+              </label>
+            </div>
+            <div class="medium-6 columns">
+              <label>Province:
+                <input type="text" name="province" placeholder="Province">
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="medium-6 columns">
+              <label>Licensed:
+                <select name="licensed">
+                  <option value="">Select</option>
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select>
+              </label>
+            </div>
+            <div class="medium-6 columns">
+              <label>Victims:
+                <input type="number" name="victims" placeholder="Victims">
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="medium-6 columns">
+              <label>Deaths:
+                <input type="number" name="deaths" placeholder="Deaths">
+              </label>
+            </div>
+            <div class="medium-6 columns">
+              <label>Injuries:
+                <input type="number" name="injuries" placeholder="Injuries">
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="medium-6 columns">
+              <label>Suicide:
+                <select name="suicide">
+                  <option value="">Select</option>
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select>
+              </label>
+            </div>
+            <div class="medium-6 columns">
+              <label>Devices Used:
+                <input type="text" name="devices_used" placeholder="Devices Used">
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="medium-6 columns">
+              <label>Firearms:
+                <select name="firearms">
+                  <option value="">Select</option>
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="medium-6 columns">
+              <label>Warnings:
+                <input type="text" name="warnings" placeholder="Warnings">
+              </label>
+            </div>
+            <div class="medium-6 columns">
+              <label>OIC Impact:
+                <select name="oic_impact">
+                  <option value="">Select</option>
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="medium-12 columns">
+              <input type="submit" class="button" value="Submit">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>  
+{{template "footer"}}
+</body>
+</html>{{end}}

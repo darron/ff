@@ -26,6 +26,7 @@ var (
 	NewsStoriesAPIPathFull = APIPath + NewsStoriesAPIPath
 	RecordsAPIPath         = "/records"
 	RecordsAPIPathFull     = APIPath + RecordsAPIPath
+	AdminAPIPath           = "/admin"
 
 	// Middleware Cache settings
 	cacheCapacity   = 10000
@@ -124,6 +125,10 @@ func Get(conf *config.App, templates string) (*echo.Echo, error) {
 	j.POST(NewsStoriesAPIPath, s.CreateNewsStory)
 	j.POST(NewsStoriesAPIPath+"/download/:id", s.DownloadNewsStory)
 	j.POST(NewsStoriesAPIPath+"/getall", s.DownloadAllNewsStories)
+
+	// Admin Interface
+	a := e.Group(AdminAPIPath)
+	a.GET("/new", s.RecordForm)
 
 	return e, nil
 }

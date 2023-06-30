@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"crypto/tls"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -153,6 +154,12 @@ func StartService() {
 	if err != nil {
 		conf.Logger.Error(err.Error())
 		os.Exit(1)
+	}
+
+	if logLevel == "debug" {
+		for _, route := range s.Routes() {
+			fmt.Printf("Route: %s %s\n", route.Method, route.Path)
+		}
 	}
 
 	// If we are going to turn on TLS - let's launch it.
