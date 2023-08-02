@@ -1,17 +1,19 @@
-## firearms facts website
+## Mass Murder Canada Website
+
+[https://www.massmurdercanada.org/](https://www.massmurdercanada.org/)
 
 ### GOALS
 
-1. Show this data in a more complete format: https://bit.ly/canadian-multiple-murders
-2. Be able to search and show summaries: by province, by City, same tabs as in the spreadsheet
+1. ✅ Show this data in a more complete format: https://bit.ly/canadian-multiple-murders
+2. Partial ✅ Be able to search and show summaries: by province, by City, same tabs as in the spreadsheet
 3. Show graphs of data across time.
-4. Grab web page data and store in DB.
+4. ✅ Grab web page data and store in DB.
 5. Summaries of web pages by OpenAI.
 6. Summarize ALL of the news articles for a particular record.
-7. Store in Postgres.
-8. Served by Cloudflare.
-9. Import spreadsheet via CSV.
-10. Use some of the new Golang patterns I've been learning.
+7. ✅ Store in ~Postgres~ SQLite.
+8. ✅ Served by Cloudflare.
+9. ✅ Import spreadsheet via CSV.
+10. ✅ Use some of the new Golang patterns I've been learning.
 
 ### TODO
 - [x] Add logger to config
@@ -82,5 +84,3 @@
 - [ ] Add Search?
 - [ ] https://echo.labstack.com/cookbook/graceful-shutdown/
 - [ ] Might need to do some more performance tuning once we have more traffic.
-
-And much, much more.
