@@ -24,15 +24,20 @@ var (
 		Use:   "news",
 		Short: "Send core.NewsStory to HTTP endpoint",
 		Run: func(cmd *cobra.Command, args []string) {
-			tlsConfig := config.TLS{
-				DomainNames: tlsDomains,
+			var opts []config.OptFunc
+			opts = append(opts, config.WithPort(port))
+			opts = append(opts, config.WithLogger(logLevel, logFormat))
+			opts = append(opts, config.WithJWTToken(jwtToken))
+			// We only need the right domain name to connect with
+			// TLS - we don't need any of the other values.
+			if enableTLS && tlsDomains != "" {
+				tls := config.TLS{
+					DomainNames: tlsDomains,
+					Enable:      enableTLS,
+				}
+				opts = append(opts, config.WithTLS(tls))
 			}
-			conf, err := config.Get(
-				config.WithPort(port),
-				config.WithLogger(logLevel, logFormat),
-				config.WithJWTToken(jwtToken),
-				config.WithTLS(tlsConfig),
-			)
+			conf, err := config.Get(opts...)
 			if err != nil {
 				log.Fatal(err)
 			}
