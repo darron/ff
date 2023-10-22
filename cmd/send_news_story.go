@@ -24,10 +24,15 @@ var (
 		Use:   "news",
 		Short: "Send core.NewsStory to HTTP endpoint",
 		Run: func(cmd *cobra.Command, args []string) {
+			tlsConfig := config.TLS{
+				DomainNames: tlsDomains,
+			}
 			conf, err := config.Get(
 				config.WithPort(port),
 				config.WithLogger(logLevel, logFormat),
-				config.WithJWTToken(jwtToken))
+				config.WithJWTToken(jwtToken),
+				config.WithTLS(tlsConfig),
+			)
 			if err != nil {
 				log.Fatal(err)
 			}
