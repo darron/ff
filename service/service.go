@@ -30,7 +30,7 @@ var (
 	// Middleware Cache settings
 	cacheCapacity   = 10000
 	cacheRefreshKey = "opn" // ?$cacheRefreshKey=true to a page to force a refresh
-	cacheTTL        = 32 * time.Hour
+	cacheTTL        = 30 * time.Minute
 	nonCachedPaths  = []string{"/api"}
 )
 
