@@ -16,7 +16,7 @@ import (
 	"github.com/microcosm-cc/bluemonday"
 )
 
-func (s HTTPService) GetNewsStory(c echo.Context) error {
+func (s *HTTPService) GetNewsStory(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {
 		return c.JSON(http.StatusNotFound, "id must not be blank")
@@ -31,7 +31,7 @@ func (s HTTPService) GetNewsStory(c echo.Context) error {
 	return c.JSON(http.StatusOK, ns)
 }
 
-func (s HTTPService) CreateNewsStory(c echo.Context) error {
+func (s *HTTPService) CreateNewsStory(c echo.Context) error {
 	ns := &core.NewsStory{}
 	if err := c.Bind(ns); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
@@ -46,7 +46,7 @@ func (s HTTPService) CreateNewsStory(c echo.Context) error {
 	return c.JSON(http.StatusCreated, id)
 }
 
-func (s HTTPService) DownloadNewsStory(c echo.Context) error {
+func (s *HTTPService) DownloadNewsStory(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {
 		return c.JSON(http.StatusNotFound, "id must not be blank")
@@ -69,7 +69,7 @@ func (s HTTPService) DownloadNewsStory(c echo.Context) error {
 	return c.JSON(http.StatusNoContent, ns.ID)
 }
 
-func (s HTTPService) DownloadAllNewsStories(c echo.Context) error {
+func (s *HTTPService) DownloadAllNewsStories(c echo.Context) error {
 	// Get all Records.
 	records, err := s.conf.RecordRepository.GetAll()
 	if err != nil {

@@ -21,7 +21,7 @@ func checkJWTToken(c echo.Context) error {
 	return nil
 }
 
-func (s HTTPService) GetRecord(c echo.Context) error {
+func (s *HTTPService) GetRecord(c echo.Context) error {
 	// TODO: Fix tests so we can have this - it's not used at the moment.
 	// err := checkJWTToken(c)
 	// if err != nil {
@@ -41,7 +41,7 @@ func (s HTTPService) GetRecord(c echo.Context) error {
 	return c.JSON(http.StatusOK, r)
 }
 
-func (s HTTPService) CreateRecord(c echo.Context) error {
+func (s *HTTPService) CreateRecord(c echo.Context) error {
 	r := &core.Record{}
 	if err := c.Bind(r); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
@@ -53,7 +53,7 @@ func (s HTTPService) CreateRecord(c echo.Context) error {
 	return c.JSON(http.StatusCreated, id)
 }
 
-func (s HTTPService) GetAllRecords(c echo.Context) error {
+func (s *HTTPService) GetAllRecords(c echo.Context) error {
 	// Get all records.
 	records, err := s.conf.RecordRepository.GetAll()
 	if err != nil {

@@ -13,7 +13,7 @@ var (
 	provinces = []string{"BC", "AB", "ON", "NT", "YT", "NB", "NL", "NS", "PE", "QC", "MB", "SK", "NU", "USA"}
 )
 
-func (s HTTPService) Root(c echo.Context) error {
+func (s *HTTPService) Root(c echo.Context) error {
 	// For display
 	var dRecords []core.Record
 	records, err := s.conf.RecordRepository.GetAll()
@@ -27,7 +27,7 @@ func (s HTTPService) Root(c echo.Context) error {
 	return c.Render(http.StatusOK, "records", dRecords)
 }
 
-func (s HTTPService) Group(c echo.Context) error {
+func (s *HTTPService) Group(c echo.Context) error {
 	group := c.Param("group")
 	if group == "" {
 		return c.String(http.StatusNotFound, "group must not be blank")
@@ -44,7 +44,7 @@ func (s HTTPService) Group(c echo.Context) error {
 	return c.Render(http.StatusOK, "records", newRecords)
 }
 
-func (s HTTPService) IndividualRecord(c echo.Context) error {
+func (s *HTTPService) IndividualRecord(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {
 		return c.String(http.StatusNotFound, "id must not be blank")
@@ -56,7 +56,7 @@ func (s HTTPService) IndividualRecord(c echo.Context) error {
 	return c.Render(http.StatusOK, "record", r)
 }
 
-func (s HTTPService) Province(c echo.Context) error {
+func (s *HTTPService) Province(c echo.Context) error {
 	province := c.Param("province")
 	if province == "" {
 		return c.String(http.StatusBadRequest, "province must not be blank")
