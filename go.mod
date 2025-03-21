@@ -8,7 +8,7 @@ require (
 	github.com/carlmjohnson/versioninfo v0.22.4
 	github.com/go-faker/faker/v4 v4.1.0
 	github.com/gojek/heimdall/v7 v7.0.2
-	github.com/golang-jwt/jwt/v5 v5.0.0
+	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/golang-migrate/migrate/v4 v4.16.2
 	github.com/google/uuid v1.3.0
 	github.com/jmoiron/sqlx v1.3.5
