@@ -1,5 +1,7 @@
 ## Mass Murder Canada Website
 
+Archived for new Cloudflare Workers based site: [https://github.com/darron/ff-workers](https://github.com/darron/ff-workers)
+
 [https://www.massmurdercanada.org/](https://www.massmurdercanada.org/)
 
 ### GOALS
